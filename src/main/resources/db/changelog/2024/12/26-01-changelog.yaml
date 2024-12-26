@@ -1,0 +1,341 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1735201714476-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_article
+                  name: id
+                  type: UUID
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+              - column:
+                  name: image
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: DATE
+              - column:
+                  name: consultation_id
+                  type: UUID
+              - column:
+                  name: category_id
+                  type: UUID
+            tableName: article
+  - changeSet:
+      id: 1735201714476-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_availability
+                  name: id
+                  type: UUID
+              - column:
+                  name: date
+                  type: DATE
+              - column:
+                  name: available
+                  type: BOOLEAN
+              - column:
+                  name: doctor_id
+                  type: UUID
+            tableName: availability
+  - changeSet:
+      id: 1735201714476-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_category
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: category
+  - changeSet:
+      id: 1735201714476-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_consultation
+                  name: id
+                  type: UUID
+              - column:
+                  name: date_consultation
+                  type: DATE
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: motif
+                  type: VARCHAR(255)
+              - column:
+                  name: doctor_id
+                  type: UUID
+              - column:
+                  name: user_id
+                  type: UUID
+            tableName: consultation
+  - changeSet:
+      id: 1735201714476-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_doctor
+                  name: id
+                  type: UUID
+              - column:
+                  name: address
+                  type: VARCHAR(255)
+              - column:
+                  name: experiences
+                  type: VARCHAR(255)
+              - column:
+                  name: diploma
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: DOUBLE
+              - column:
+                  name: user_id
+                  type: UUID
+            tableName: doctor
+  - changeSet:
+      id: 1735201714476-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: doctors_id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: specialties_id
+                  type: UUID
+            tableName: doctor_specialties
+  - changeSet:
+      id: 1735201714476-7
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_document
+                  name: id
+                  type: UUID
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+              - column:
+                  name: date_generation
+                  type: DATE
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: consultation_id
+                  type: UUID
+            tableName: document
+  - changeSet:
+      id: 1735201714476-8
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_speciality
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: speciality
+  - changeSet:
+      id: 1735201714476-9
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user
+                  name: id
+                  type: UUID
+              - column:
+                  name: user_name
+                  type: VARCHAR(255)
+              - column:
+                  name: email_address
+                  type: VARCHAR(255)
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(255)
+              - column:
+                  name: image
+                  type: VARCHAR(255)
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+            tableName: user
+  - changeSet:
+      id: 1735201714476-10
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_CATEGORY
+            referencedColumnNames: id
+            referencedTableName: category
+  - changeSet:
+      id: 1735201714476-11
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: consultation_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_CONSULTATION
+            referencedColumnNames: id
+            referencedTableName: consultation
+  - changeSet:
+      id: 1735201714476-12
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: doctor_id
+            baseTableName: availability
+            constraintName: FK_AVAILABILITY_ON_DOCTOR
+            referencedColumnNames: id
+            referencedTableName: doctor
+  - changeSet:
+      id: 1735201714476-13
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: doctor_id
+            baseTableName: consultation
+            constraintName: FK_CONSULTATION_ON_DOCTOR
+            referencedColumnNames: id
+            referencedTableName: doctor
+  - changeSet:
+      id: 1735201714476-14
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: consultation
+            constraintName: FK_CONSULTATION_ON_USER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1735201714476-15
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: doctor
+            constraintName: FK_DOCTOR_ON_USER
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1735201714476-16
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: consultation_id
+            baseTableName: document
+            constraintName: FK_DOCUMENT_ON_CONSULTATION
+            referencedColumnNames: id
+            referencedTableName: consultation
+  - changeSet:
+      id: 1735201714476-17
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: doctors_id
+            baseTableName: doctor_specialties
+            constraintName: fk_docspe_on_doctor
+            referencedColumnNames: id
+            referencedTableName: doctor
+  - changeSet:
+      id: 1735201714476-18
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: specialties_id
+            baseTableName: doctor_specialties
+            constraintName: fk_docspe_on_speciality
+            referencedColumnNames: id
+            referencedTableName: speciality
+
