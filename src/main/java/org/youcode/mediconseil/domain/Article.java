@@ -29,5 +29,4 @@ public class Article {
     @ManyToOne
     private Category category;
 
-    // Getters and
 }
