@@ -1,0 +1,11 @@
+name: mediConseil
+services:
+  postgres:
+    container_name: mediConseil
+    image: 'postgres:17'
+    environment:
+      - 'POSTGRES_DB=mediConseil'
+      - 'POSTGRES_PASSWORD=password'
+      - 'POSTGRES_USER=mediConseil'
+    ports:
+      - '5432:5432'
