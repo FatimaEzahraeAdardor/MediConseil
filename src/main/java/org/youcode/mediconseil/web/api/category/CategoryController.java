@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 import org.youcode.mediconseil.domain.Category;
 import org.youcode.mediconseil.service.CategoryService;
@@ -53,5 +54,12 @@ public class CategoryController {
     public ResponseEntity<String> deleteSpecies(@PathVariable UUID id) {
       categoryService.delete(id);
      return ResponseEntity.ok("category deleted successfully");
+    }
+    @GetMapping()
+    public ResponseEntity<Page<CategoryResponseVM>> getAllCategories(@RequestParam int page, @RequestParam int size) {
+        Page<Category> categories =categoryService.getAllCategoriesPaginated(page,size);
+        List<CategoryResponseVM> categoryResponseVMS =categories.getContent().stream().map(categoryMapper::toVM).toList();
+        Page<CategoryResponseVM> categoryResponseVMPage = new PageImpl<>(categoryResponseVMS);
+        return ResponseEntity.ok(categoryResponseVMPage);
     }
 }

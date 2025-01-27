@@ -13,6 +13,6 @@ public interface CategoryService {
     Category update(UUID id,Category category);
     Boolean delete(UUID id);
     Optional<Category> findById(UUID id);
-    Page<Speciality> getAllCategoriesPaginated(int page, int size);
+    Page<Category> getAllCategoriesPaginated(int page, int size);
 
 }

@@ -1,6 +1,7 @@
 package org.youcode.mediconseil.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.Category;
 import org.youcode.mediconseil.domain.Speciality;
@@ -66,8 +67,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<Speciality> getAllCategoriesPaginated(int page, int size) {
-        return null;
+    public Page<Category> getAllCategoriesPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryRepository.findAll(pageable);
     }
 
 }
