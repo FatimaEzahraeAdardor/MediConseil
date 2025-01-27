@@ -20,6 +20,5 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Article> articles ;
-
+    private List<Article> articles;
 }
