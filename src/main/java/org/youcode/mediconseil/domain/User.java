@@ -23,7 +23,9 @@ public class User implements UserDetails {
     private UUID id;
 
     private String userName;
-    private String emailAddress;
+    private String firstName;
+    private String lastName;
+    private String email;
     private String password;
     private String city;
     private String phoneNumber;
@@ -45,7 +47,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return emailAddress;
+        return email;
     }
 
     @Override

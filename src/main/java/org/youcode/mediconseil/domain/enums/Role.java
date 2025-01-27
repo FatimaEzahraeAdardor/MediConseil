@@ -70,4 +70,5 @@ public enum Role {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + name()));
         return authorities;
     }
+
 }
