@@ -1,29 +1,30 @@
 package org.youcode.mediconseil.domain;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
+
+
 @Entity
+@Table(name = "cities")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class City {
 
-public class Speciality {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(unique = true)
     private String name;
 
-
-
-    @ManyToMany(mappedBy = "specialties")
-    private List<Doctor> doctors ;
+    private String region;
 
 }

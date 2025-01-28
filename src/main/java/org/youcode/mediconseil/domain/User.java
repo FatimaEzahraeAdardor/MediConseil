@@ -1,5 +1,6 @@
 package org.youcode.mediconseil.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,9 +36,12 @@ public class User implements UserDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)
+    @JsonBackReference  // Ce côté ne sera PAS sérialisé
     private City city;
 
     private String phoneNumber;
+
+    @Column(name = "image_url")
     private String image;
 
     @Enumerated(EnumType.STRING)

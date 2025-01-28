@@ -35,5 +35,4 @@ public class Consultation {
     @OneToMany(mappedBy = "consultation")
     private List<Article> articles ;
 
-    // Getters and setters
 }
