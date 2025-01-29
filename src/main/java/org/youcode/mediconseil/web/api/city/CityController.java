@@ -9,10 +9,10 @@ import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.web.vm.mapper.CityMapper;
 import org.youcode.mediconseil.web.vm.request.CityRequestVM;
+import org.youcode.mediconseil.web.vm.response.CategoryResponseVM;
 import org.youcode.mediconseil.web.vm.response.CityResponseVM;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/cities")
@@ -33,7 +33,37 @@ public class CityController {
         CityResponseVM cityResponseVM = cityMapper.toVM(createdCity);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "city created successfully");
-        response.put("category", cityResponseVM);
+        response.put("city", cityResponseVM);
         return new  ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    @PutMapping("update/{id}")
+    public ResponseEntity<Map<String, Object>> updateCity(@PathVariable("id") UUID id, @RequestBody @Valid CityRequestVM cityRequestVM){
+        City city = cityMapper.toEntity(cityRequestVM);
+        City updateCity = cityService.update(id ,city);
+        CityResponseVM cityResponseVM = cityMapper.toVM(updateCity);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "city updated successfully");
+        response.put("city", cityResponseVM);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<String> deleteCity(@PathVariable("id") UUID id){
+        cityService.delete(id);
+        return ResponseEntity.ok("city deleted successfully");
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<CityResponseVM> findById(@PathVariable UUID id) {
+        Optional<City> city = cityService.findById(id);
+        CityResponseVM cityResponseVM = cityMapper.toVM(city.get());
+        return ResponseEntity.ok(cityResponseVM);
+    }
+    @GetMapping()
+    public ResponseEntity<List<CityResponseVM>> findAll() {
+        List<City> cityList = cityService.findAll();
+        List<CityResponseVM> cityResponseVMSlist =cityList.stream().map(cityMapper::toVM).toList();
+        return ResponseEntity.ok(cityResponseVMSlist);
+
+    }
+
 }

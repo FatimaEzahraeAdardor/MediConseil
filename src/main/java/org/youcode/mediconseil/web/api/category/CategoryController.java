@@ -5,18 +5,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 import org.youcode.mediconseil.domain.Category;
+import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.service.CategoryService;
 import org.youcode.mediconseil.web.vm.mapper.CategoryMapper;
 import org.youcode.mediconseil.web.vm.request.CategoryRequestVM;
 import org.youcode.mediconseil.web.vm.response.CategoryResponseVM;
+import org.youcode.mediconseil.web.vm.response.CityResponseVM;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -55,6 +54,12 @@ public class CategoryController {
       categoryService.delete(id);
      return ResponseEntity.ok("category deleted successfully");
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponseVM> findById(@PathVariable UUID id) {
+        Optional<Category> category = categoryService.findById(id);
+        CategoryResponseVM categoryResponseVM = categoryMapper.toVM(category.get());
+        return ResponseEntity.ok(categoryResponseVM);
+    }
     @GetMapping()
     public ResponseEntity<Page<CategoryResponseVM>> getAllCategories(@RequestParam int page, @RequestParam int size) {
         Page<Category> categories =categoryService.getAllCategoriesPaginated(page,size);
@@ -62,4 +67,5 @@ public class CategoryController {
         Page<CategoryResponseVM> categoryResponseVMPage = new PageImpl<>(categoryResponseVMS);
         return ResponseEntity.ok(categoryResponseVMPage);
     }
+
 }
