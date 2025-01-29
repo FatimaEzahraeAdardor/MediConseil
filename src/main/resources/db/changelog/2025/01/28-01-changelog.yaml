@@ -31,16 +31,7 @@ databaseChangeLog:
                   name: city_id
                   type: UUID
               - column:
-                  name: email
-                  type: VARCHAR(255)
-              - column:
-                  name: first_name
-                  type: VARCHAR(255)
-              - column:
                   name: image_url
-                  type: VARCHAR(255)
-              - column:
-                  name: last_name
                   type: VARCHAR(255)
             tableName: user
   - changeSet:
@@ -127,9 +118,6 @@ databaseChangeLog:
       changes:
         - dropColumn:
             columnName: city
-            tableName: user
-        - dropColumn:
-            columnName: email_address
             tableName: user
         - dropColumn:
             columnName: image
