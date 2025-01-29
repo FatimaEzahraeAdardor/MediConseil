@@ -1,6 +1,8 @@
 package org.youcode.mediconseil.service.impl;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.Category;
 import org.youcode.mediconseil.domain.City;
@@ -61,6 +63,7 @@ public class SpecialityServiceImp implements SpecialityService {
 
     @Override
     public Page<Speciality> getAllSpecialitiesPaginated(int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        return specialityRepository.findAll(pageable);
     }
 }
