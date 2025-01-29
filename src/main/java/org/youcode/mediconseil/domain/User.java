@@ -35,7 +35,6 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", nullable = false)
     @JsonBackReference  // Ce côté ne sera PAS sérialisé
     private City city;
 

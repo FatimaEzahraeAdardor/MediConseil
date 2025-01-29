@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -26,5 +27,8 @@ public class City {
     private String name;
 
     private String region;
+
+    @OneToMany(mappedBy = "city")
+    private List<User> users;
 
 }

@@ -6,4 +6,6 @@ import org.youcode.mediconseil.domain.City;
 import java.util.UUID;
 
 public interface CityRepository extends JpaRepository<City, UUID> {
+    boolean existsByName(String name);
+
 }

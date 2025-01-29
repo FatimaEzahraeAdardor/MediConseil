@@ -26,7 +26,7 @@ public class Doctor {
     private List<Availability> availabilities ;
 
     @OneToMany(mappedBy = "doctor")
-    private List<Consultation> consultationsB;
+    private List<Consultation> consultations;
     @OneToOne
     private User user;
     @ManyToMany

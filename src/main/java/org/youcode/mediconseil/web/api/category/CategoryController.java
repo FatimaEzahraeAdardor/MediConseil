@@ -31,7 +31,7 @@ public class CategoryController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<Map<String, Object>> addSpecies(@RequestBody @Valid CategoryRequestVM categoryRequestVM){
+    public ResponseEntity<Map<String, Object>> addCategory(@RequestBody @Valid CategoryRequestVM categoryRequestVM){
         Category category = categoryMapper.toEntity(categoryRequestVM);
         Category createdCategory = categoryService.save(category);
         CategoryResponseVM categoryResponseVm = categoryMapper.toVM(createdCategory);
@@ -41,7 +41,7 @@ public class CategoryController {
         return new  ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @PutMapping("update/{id}")
-    public ResponseEntity<Map<String, Object>> updateSpecies(@PathVariable UUID id, @RequestBody @Valid CategoryRequestVM categoryRequestVM) {
+    public ResponseEntity<Map<String, Object>> updateCategory(@PathVariable UUID id, @RequestBody @Valid CategoryRequestVM categoryRequestVM) {
         Category category = categoryMapper.toEntity(categoryRequestVM);
         Category updatedCategory = categoryService.update(id,category);
         CategoryResponseVM categoryResponseVM = categoryMapper.toVM(updatedCategory);
@@ -51,7 +51,7 @@ public class CategoryController {
         return new  ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteSpecies(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable UUID id) {
       categoryService.delete(id);
      return ResponseEntity.ok("category deleted successfully");
     }
