@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface SpecialityService {
     Speciality save(Speciality speciality);
-    Speciality update(Speciality speciality);
+    Speciality update(UUID id, Speciality speciality);
     Boolean delete(UUID id);
     Optional<Speciality> findById(UUID id);
     Page<Speciality> getAllSpecialitiesPaginated(int page, int size);
