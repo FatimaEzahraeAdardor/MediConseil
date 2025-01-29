@@ -3,6 +3,7 @@ package org.youcode.mediconseil.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.Category;
+import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.repository.SpecialityRepository;
 import org.youcode.mediconseil.service.SpecialityService;
@@ -31,8 +32,14 @@ public class SpecialityServiceImp implements SpecialityService {
 
     @Override
     public Speciality update(UUID id, Speciality speciality) {
-        return null;
+        Speciality existingSpeciality = specialityRepository.findById(id).orElseThrow(() -> new InvalidObjectExeption("Speciality not found"));
+        if (specialityRepository.existsByName(speciality.getName())) {
+            throw new AlreadyExistException("this speciality already exist");
+        }
+        existingSpeciality.setName(speciality.getName() != null ? speciality.getName() : existingSpeciality.getName());
+        return specialityRepository.save(existingSpeciality);
     }
+
 
     @Override
     public Boolean delete(UUID id) {
