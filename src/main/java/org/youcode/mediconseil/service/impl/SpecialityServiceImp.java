@@ -48,7 +48,12 @@ public class SpecialityServiceImp implements SpecialityService {
 
     @Override
     public Optional<Speciality> findById(UUID id) {
-        return Optional.empty();
+        Optional<Speciality> specialityOptional = specialityRepository.findById(id);
+        if (specialityOptional.isPresent()) {
+            return specialityOptional;
+        } else {
+            throw new InvalidObjectExeption("speciality not found");
+        }
     }
 
     @Override

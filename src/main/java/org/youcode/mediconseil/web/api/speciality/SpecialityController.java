@@ -16,6 +16,7 @@ import org.youcode.mediconseil.web.vm.response.SpecialityResponseVm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -48,6 +49,12 @@ public class SpecialityController {
         response.put("speciality", specialityResponseVm);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<SpecialityResponseVm> findById(@PathVariable UUID id) {
+        Optional<Speciality> specialityOptional = specialityService.findById(id);
+        SpecialityResponseVm specialityResponseVm = specialityMapper.toVM(specialityOptional.get());
+        return ResponseEntity.ok(specialityResponseVm);
     }
 
 }
