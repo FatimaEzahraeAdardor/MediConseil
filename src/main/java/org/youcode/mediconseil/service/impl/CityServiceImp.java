@@ -61,8 +61,11 @@ public class CityServiceImp implements CityService {
     }
 
     @Override
-    public List<City> findByRegion(String region) {
-        return List.of();
+    public List<City> findAllByRegion(String region) {
+        if(region != null && !region.isEmpty()) {
+            return cityRepository.findByRegion(region);
+        }
+        return cityRepository.findAll();
     }
 
 }

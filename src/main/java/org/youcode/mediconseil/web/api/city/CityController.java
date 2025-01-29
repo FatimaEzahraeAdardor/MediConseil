@@ -65,5 +65,12 @@ public class CityController {
         return ResponseEntity.ok(cityResponseVMSlist);
 
     }
+    @GetMapping("all")
+    public ResponseEntity<List<CityResponseVM>> findCitiesByRegion(@RequestParam(required = false) String region) {
+        List<City> cityList = cityService.findAllByRegion(region);
+        List<CityResponseVM> cityResponseVMSlist = cityList.stream().map(cityMapper::toVM).toList();
+        return ResponseEntity.ok(cityResponseVMSlist);
+    }
+
 
 }

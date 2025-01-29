@@ -11,6 +11,6 @@ public interface CityService {
     Boolean delete(UUID id);
     Optional<City> findById(UUID id);
     List<City> findAll();
-    List<City> findByRegion(String region);
+    List<City> findAllByRegion(String region);
 
 }
