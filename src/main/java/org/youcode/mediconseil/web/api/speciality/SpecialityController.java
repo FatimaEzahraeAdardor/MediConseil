@@ -56,5 +56,10 @@ public class SpecialityController {
         SpecialityResponseVm specialityResponseVm = specialityMapper.toVM(specialityOptional.get());
         return ResponseEntity.ok(specialityResponseVm);
     }
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<String > delete(@PathVariable UUID id) {
+        specialityService.delete(id);
+        return ResponseEntity.ok("Deleted speciality successfully");
+    }
 
 }

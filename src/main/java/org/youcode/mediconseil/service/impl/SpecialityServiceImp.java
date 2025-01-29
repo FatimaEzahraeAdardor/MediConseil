@@ -43,7 +43,10 @@ public class SpecialityServiceImp implements SpecialityService {
 
     @Override
     public Boolean delete(UUID id) {
-        return null;
+        Speciality speciality = specialityRepository.findById(id)
+                .orElseThrow(() -> new InvalidObjectExeption("speciality not found"));
+        specialityRepository.delete(speciality);
+        return true;
     }
 
     @Override
