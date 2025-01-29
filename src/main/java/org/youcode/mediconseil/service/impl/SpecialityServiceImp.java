@@ -4,8 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.youcode.mediconseil.domain.Category;
-import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.repository.SpecialityRepository;
 import org.youcode.mediconseil.service.SpecialityService;

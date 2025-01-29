@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.User;
-import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.UserRepository;
 import org.youcode.mediconseil.security.JwtService;
 import org.youcode.mediconseil.service.AuthService;
