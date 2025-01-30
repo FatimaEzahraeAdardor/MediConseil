@@ -7,12 +7,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
+import org.youcode.mediconseil.domain.Doctor;
+import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.domain.User;
+import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.UserRepository;
 import org.youcode.mediconseil.security.JwtService;
 import org.youcode.mediconseil.service.AuthService;
 import org.youcode.mediconseil.service.CityService;
+import org.youcode.mediconseil.service.DoctorService;
+import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.web.vm.request.AuthenticationRequest;
+import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
 import org.youcode.mediconseil.web.vm.response.AuthenticationResponse;
 
@@ -26,6 +32,8 @@ public class AuthenticationServiceImp implements AuthService {
     private final JwtService jwtService;
     private final CityService cityService;
     private final AuthenticationManager authenticationManager;
+    private final DoctorService doctorService;
+    private final SpecialityService specialityService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         City city = cityService.findById(request.getCity_id())
@@ -42,7 +50,26 @@ public class AuthenticationServiceImp implements AuthService {
                 .role(request.getRole())
                 .build();
 
-        appUserRepository.save(user);
+        user = appUserRepository.save(user);
+
+        if (request.getRole() == Role.DOCTOR && request.getDoctorDetails() != null) {
+            DoctorRequestVm doctorDetails = request.getDoctorDetails();
+
+            Speciality speciality = specialityService.findById(doctorDetails.getSpecialtyId())
+                    .orElseThrow(() -> new IllegalArgumentException("Specialty not found with ID: " + doctorDetails.getSpecialtyId()));
+
+            Doctor doctor = Doctor.builder()
+                    .user(user)
+                    .specialty(speciality)
+                    .address(doctorDetails.getAddress())
+                    .experiences(doctorDetails.getExperiences())
+                    .diploma(doctorDetails.getDiploma())
+                    .description(doctorDetails.getDescription())
+                    .price(doctorDetails.getPrice())
+                    .build();
+
+            doctorService.save(doctor);
+        }
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
