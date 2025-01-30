@@ -32,7 +32,5 @@ public class Consultation {
     @OneToMany(mappedBy = "consultation")
     private List<Document> documents ;
 
-    @OneToMany(mappedBy = "consultation")
-    private List<Article> articles ;
 
 }
