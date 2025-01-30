@@ -21,9 +21,8 @@ public class Speciality {
 
     private String name;
 
-
-
-    @ManyToMany(mappedBy = "specialties")
+    @OneToMany(mappedBy = "specialty")
     private List<Doctor> doctors ;
+
 
 }

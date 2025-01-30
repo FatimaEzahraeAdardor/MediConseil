@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1738266930142-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: article
+            constraintName: fk_article_on_doctor
+  - changeSet:
+      id: 1738266930142-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: doctor_specialties
+            constraintName: fk_docspe_on_doctor
+  - changeSet:
+      id: 1738266930142-7
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: doctor_specialties
+            constraintName: fk_docspe_on_speciality
+  - changeSet:
+      id: 1738266930142-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: consultation_id
+                  type: UUID
+            tableName: article
+  - changeSet:
+      id: 1738266930142-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: specialtie_id
+                  type: UUID
+            tableName: doctor
+  - changeSet:
+      id: 1738266930142-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: consultation_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_CONSULTATION
+            referencedColumnNames: id
+            referencedTableName: consultation
+  - changeSet:
+      id: 1738266930142-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: specialtie_id
+            baseTableName: doctor
+            constraintName: FK_DOCTOR_ON_SPECIALTIE
+            referencedColumnNames: id
+            referencedTableName: speciality
+  - changeSet:
+      id: 1738266930142-8
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: doctor_specialties
+  - changeSet:
+      id: 1738266930142-9
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: doctor_id
+            tableName: article
+
