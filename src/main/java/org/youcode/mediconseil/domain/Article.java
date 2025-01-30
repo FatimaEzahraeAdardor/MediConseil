@@ -31,9 +31,9 @@ public class Article {
     private LocalDateTime created_at;
 
     @ManyToOne
-    private Consultation consultation;
+    private Category category;
 
     @ManyToOne
-    private Category category;
+    private Doctor doctor;
 
 }

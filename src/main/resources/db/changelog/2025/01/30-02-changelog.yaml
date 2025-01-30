@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1738265557910-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_article
+                  name: id
+                  type: UUID
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: content
+                  type: VARCHAR(5000)
+              - column:
+                  name: image_url
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: category_id
+                  type: UUID
+              - column:
+                  name: doctor_id
+                  type: UUID
+            tableName: article
+  - changeSet:
+      id: 1738265557910-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_CATEGORY
+            referencedColumnNames: id
+            referencedTableName: category
+  - changeSet:
+      id: 1738265557910-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: doctor_id
+            baseTableName: article
+            constraintName: FK_ARTICLE_ON_DOCTOR
+            referencedColumnNames: id
+            referencedTableName: doctor
+  - changeSet:
+      id: 1738265557910-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: uuid
+            columnName: city_id
+            tableName: user
+

@@ -30,5 +30,5 @@ public class Doctor {
     @OneToOne
     private User user;
     @ManyToOne
-    private Speciality specialtie;
+    private Speciality specialty;
 }
