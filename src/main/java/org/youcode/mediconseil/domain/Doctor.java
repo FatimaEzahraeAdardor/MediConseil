@@ -29,6 +29,6 @@ public class Doctor {
     private List<Consultation> consultations;
     @OneToOne
     private User user;
-    @ManyToMany
-    private List<Speciality> specialties;
+    @ManyToOne
+    private Speciality specialty;
 }

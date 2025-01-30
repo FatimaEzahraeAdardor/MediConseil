@@ -23,7 +23,7 @@ public class Speciality {
 
 
 
-    @ManyToMany(mappedBy = "specialties")
+    @OneToMany(mappedBy = "specialty")
     private List<Doctor> doctors ;
 
 }
