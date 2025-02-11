@@ -7,8 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
-import org.youcode.mediconseil.domain.Doctor;
-import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.UserRepository;
@@ -51,25 +49,6 @@ public class AuthenticationServiceImp implements AuthService {
                 .build();
 
         user = appUserRepository.save(user);
-
-        if (request.getRole() == Role.DOCTOR && request.getDoctorDetails() != null) {
-            DoctorRequestVm doctorDetails = request.getDoctorDetails();
-
-            Speciality speciality = specialityService.findById(doctorDetails.getSpecialtyId())
-                    .orElseThrow(() -> new IllegalArgumentException("Specialty not found with ID: " + doctorDetails.getSpecialtyId()));
-
-            Doctor doctor = Doctor.builder()
-                    .user(user)
-                    .specialty(speciality)
-                    .address(doctorDetails.getAddress())
-                    .experiences(doctorDetails.getExperiences())
-                    .diploma(doctorDetails.getDiploma())
-                    .description(doctorDetails.getDescription())
-                    .price(doctorDetails.getPrice())
-                    .build();
-
-            doctorService.save(doctor);
-        }
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
