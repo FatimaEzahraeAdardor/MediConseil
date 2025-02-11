@@ -23,9 +23,14 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> updateSpeciality(@PathVariable("id") UUID id, @RequestBody @Valid RegisterRequest registerRequest){
         User savedUser = userService.update(id, registerRequest);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "speciality updated successfully");
-        response.put("speciality", savedUser);
+        response.put("message", "user updated successfully");
+        response.put("user", savedUser);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<String> deleteCity(@PathVariable("id") UUID id){
+        userService.delete(id);
+        return ResponseEntity.ok("user deleted successfully");
     }
 }

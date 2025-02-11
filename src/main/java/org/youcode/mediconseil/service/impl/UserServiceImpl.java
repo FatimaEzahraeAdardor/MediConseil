@@ -13,6 +13,7 @@ import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.service.UserService;
+import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
 
@@ -76,12 +77,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean delete(UUID id) {
-        return null;
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new InvalidObjectExeption("user not found"));
+        userRepository.delete(user);
+        return true;
     }
 
     @Override
     public Optional<User> findByID(UUID id) {
-        return Optional.empty();
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            return userOptional;
+        } else {
+            throw new InvalidObjectExeption("user not found");
+        }
     }
 
     @Override
