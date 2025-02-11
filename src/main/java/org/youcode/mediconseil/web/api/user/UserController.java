@@ -4,12 +4,16 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.service.UserService;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
+import org.youcode.mediconseil.web.vm.response.CityResponseVM;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -32,5 +36,11 @@ public class UserController {
     public ResponseEntity<String> deleteCity(@PathVariable("id") UUID id){
         userService.delete(id);
         return ResponseEntity.ok("user deleted successfully");
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable UUID id) {
+        Optional<User> userOptional = userService.findByID(id);
+        User user = userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok(user);
     }
 }

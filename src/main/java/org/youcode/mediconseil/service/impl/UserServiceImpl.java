@@ -92,7 +92,6 @@ public class UserServiceImpl implements UserService {
             throw new InvalidObjectExeption("user not found");
         }
     }
-
     @Override
     public Page<User> getAllUsersPaginated(int page, int size) {
         return null;
