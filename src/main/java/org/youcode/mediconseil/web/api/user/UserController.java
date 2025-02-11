@@ -2,18 +2,14 @@ package org.youcode.mediconseil.web.api.user;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.youcode.mediconseil.domain.Category;
-import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.service.UserService;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
-import org.youcode.mediconseil.web.vm.response.CategoryResponseVM;
-import org.youcode.mediconseil.web.vm.response.CityResponseVM;
+
 
 import java.util.*;
 
