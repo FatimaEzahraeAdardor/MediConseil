@@ -53,6 +53,5 @@ public class DoctorRequestVm {
     private Double price;
 
     @NotNull(message = "Specialty ID cannot be null")
-    @Positive(message = "Specialty ID must be a positive number")
     private UUID specialtyId;
 }
