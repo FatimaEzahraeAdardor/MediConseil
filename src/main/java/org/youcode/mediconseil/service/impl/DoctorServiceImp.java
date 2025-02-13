@@ -1,12 +1,14 @@
 package org.youcode.mediconseil.service.impl;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import org.youcode.mediconseil.domain.Category;
-import org.youcode.mediconseil.domain.City;
-import org.youcode.mediconseil.domain.Doctor;
+import org.youcode.mediconseil.domain.*;
+import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.DoctorRepository;
+import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.service.DoctorService;
+import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 
@@ -15,8 +17,12 @@ import java.util.UUID;
 @Service
 public class DoctorServiceImp implements DoctorService {
     private final DoctorRepository doctorRepository;
-    public DoctorServiceImp(DoctorRepository doctorRepository) {
+    private final CityService cityService;
+    private final SpecialityService specialityService;
+    public DoctorServiceImp(DoctorRepository doctorRepository, CityService cityService, SpecialityService specialityService) {
         this.doctorRepository = doctorRepository;
+        this.cityService = cityService;
+        this.specialityService = specialityService;
     }
     @Override
     public Doctor save(Doctor doctor) {
@@ -28,8 +34,44 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public Doctor update(Doctor doctor) {
-        return null;
+    public Doctor update(UUID doctorId,DoctorRequestVm doctor) {
+
+        // Fetch existing doctor
+        Doctor existingDoctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + doctorId));
+
+        // Update city if provided and not null
+        if (doctor.getCityId() != null) {
+            City city = cityService.findById(doctor.getCityId())
+                    .orElseThrow(() -> new IllegalArgumentException("City not found with ID: " + doctor.getCityId()));
+            existingDoctor.setCity(city);
+        }
+        if (doctor.getSpecialtyId() != null) {
+            Speciality speciality = specialityService.findById(doctor.getSpecialtyId())
+                    .orElseThrow(() -> new IllegalArgumentException("specialty not found with ID: " + doctor.getSpecialtyId()));
+            existingDoctor.setSpeciality(speciality);
+        }
+
+
+
+        // Update general user details
+        existingDoctor.setUserName(doctor.getUserName() != null ? doctor.getUserName() : existingDoctor.getUsername());
+        existingDoctor.setFirstName(doctor.getFirstName() != null ? doctor.getFirstName() : existingDoctor.getFirstName());
+        existingDoctor.setLastName(doctor.getLastName() != null ? doctor.getLastName() : existingDoctor.getLastName());
+        existingDoctor.setEmail(doctor.getEmail() != null ? doctor.getEmail() : existingDoctor.getEmail());
+        existingDoctor.setPhoneNumber(doctor.getPhoneNumber() != null ? doctor.getPhoneNumber() : existingDoctor.getPhoneNumber());
+        existingDoctor.setPrice(doctor.getPrice() != null ? doctor.getPrice() : existingDoctor.getPrice());
+        existingDoctor.setAddress(doctor.getAddress() != null ? doctor.getAddress() : existingDoctor.getAddress());
+        existingDoctor.setDescription(doctor.getDescription() != null ? doctor.getDescription() : existingDoctor.getDescription());
+        existingDoctor.setExperiences(doctor.getExperiences() != null ? doctor.getExperiences() : existingDoctor.getExperiences());
+        existingDoctor.setDiploma(doctor.getDiploma() != null ? doctor.getDiploma() : existingDoctor.getDiploma());
+        if (doctor.getPassword() != null) {
+            existingDoctor.setPassword(BCrypt.hashpw(doctor.getPassword(), BCrypt.gensalt()));
+        }
+
+        // Save updated user
+        existingDoctor = doctorRepository.save(existingDoctor);
+        return existingDoctor;
     }
 
     @Override
