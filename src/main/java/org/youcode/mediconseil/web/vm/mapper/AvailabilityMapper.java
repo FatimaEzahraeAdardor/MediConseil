@@ -4,32 +4,21 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.youcode.mediconseil.domain.Consultation;
+import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.domain.Doctor;
-import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.repository.DoctorRepository;
-import org.youcode.mediconseil.repository.UserRepository;
-import org.youcode.mediconseil.web.vm.request.ConsultationRequestVm;
+import org.youcode.mediconseil.web.vm.request.AvailabilityRequestVm;
 
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
-public abstract class ConsultationMapper {
-    @Autowired
-    protected UserRepository userRepository;
-
+public abstract class AvailabilityMapper {
     @Autowired
     protected DoctorRepository doctorRepository;
 
     @Mapping(target = "doctor", source = "doctorId", qualifiedByName = "toDoctorById")
-    @Mapping(target = "patient", source = "patientId", qualifiedByName = "toUserById")
-    public abstract Consultation toEntity(ConsultationRequestVm request);
-
-    @Named("toUserById")
-    protected User toUserById(UUID userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + userId));
-    }
+    @Mapping(target = "isBooked", constant = "false")
+    public abstract Availability toEntity(AvailabilityRequestVm request);
 
     @Named("toDoctorById")
     protected Doctor toDoctorById(UUID doctorId) {

@@ -33,10 +33,13 @@ public class Consultation {
 
     @ManyToOne
     @NotNull
+    @JoinColumn(name = "doctor_id")
+
     private Doctor doctor;
 
     @ManyToOne
     @NotNull
+    @JoinColumn(name = "patient_id")
     private User patient;
 
     @OneToMany(mappedBy = "consultation", cascade = CascadeType.ALL)

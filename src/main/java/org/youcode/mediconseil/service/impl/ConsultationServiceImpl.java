@@ -33,20 +33,22 @@ public class ConsultationServiceImpl implements ConsultaionService {
             throw new RuntimeException("This time slot is already booked");
         }
 
+        // Verify doctor matches the availability
+        if (!availability.getDoctor().getId().equals(consultation.getDoctor().getId())) {
+            throw new RuntimeException("Doctor does not match the availability");
+        }
+
         // Mark availability as booked
         availability.setIsBooked(true);
         availabilityRepository.save(availability);
 
         // Set consultation details
-        consultation.setDoctor(availability.getDoctor());
         consultation.setDateConsultation(availability.getStartTime());
-        consultation.setStatus(ConsultationStatus.CONFIRMED);
+        consultation.setStatus(ConsultationStatus.PENDING);
 
         // Save consultation
         return consultationRepository.save(consultation);
     }
-
-
 
     @Override
     public Consultation update(Consultation consultation) {

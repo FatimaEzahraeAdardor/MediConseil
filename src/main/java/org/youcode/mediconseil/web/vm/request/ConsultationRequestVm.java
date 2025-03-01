@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -19,19 +19,18 @@ import java.util.UUID;
 public class ConsultationRequestVm {
     @NotNull(message = "Date consultation is required")
     @FutureOrPresent(message = "Date consultation must be today or in the future")
-    private LocalDate dateConsultation;
-
-    @NotBlank(message = "Status is required")
-    @Size(max = 50, message = "Status must not exceed 50 characters")
-    private String status;
+    private LocalDateTime dateConsultation;
 
     @NotBlank(message = "Motif is required")
     @Size(min = 10, max = 500, message = "Motif must be between 10 and 500 characters")
     private String motif;
 
-    @NotNull(message = "Doctor ID is required")
-    private UUID doctorId;
+    @NotNull(message = "Availability ID is required")
+    private UUID availabilityId;
 
-    @NotNull(message = "User ID is required")
-    private UUID userId;
+    @NotNull(message = "Doctor ID is required")
+    private UUID doctorId;  // Ensure this matches the method in mapper
+
+    @NotNull(message = "Patient ID is required")
+    private UUID patientId;
 }
