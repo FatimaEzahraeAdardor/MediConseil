@@ -38,6 +38,7 @@ public abstract class ConsultationMapper {
                 .orElseThrow(() -> new RuntimeException("Doctor not found with ID: " + doctorId));
     }
 
+
     @Mapping(target = "doctorId", source = "doctor.id")
     @Mapping(target = "patientId", source = "patient.id")
     public abstract ConsultationResponseVm toVm(Consultation consultation);
