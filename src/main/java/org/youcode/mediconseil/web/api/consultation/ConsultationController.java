@@ -39,4 +39,21 @@ class ConsultationController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateConsultation(
+            @PathVariable UUID id,
+            @RequestBody ConsultationRequestVm consultationRequest) {
+
+        Consultation consultation = consultationMapper.toEntity(consultationRequest);
+        consultation.setId(id);
+
+        Consultation updatedConsultation = consultationService.update(consultation, consultationRequest.getAvailabilityId());
+        ConsultationResponseVm responseVm = consultationMapper.toVm(updatedConsultation);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Consultation updated successfully");
+        response.put("consultation", responseVm);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }

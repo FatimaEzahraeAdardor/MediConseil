@@ -58,11 +58,48 @@ public class ConsultationServiceImpl implements ConsultaionService {
     }
 
     @Override
-    public Consultation update(Consultation consultation) {
-        return consultationRepository.save(consultation);
-    }
+    @Transactional
+    public Consultation update(Consultation consultation, UUID availabilityId) {
+        // Find existing consultation
+        Consultation existingConsultation = consultationRepository.findById(consultation.getId())
+                .orElseThrow(() -> new RuntimeException("Consultation not found"));
 
-    @Override
+        // Check if consultation is in PENDING status
+        if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
+            throw new RuntimeException("Only PENDING consultations can be updated");
+        }
+
+        // Find the new availability
+        Availability newAvailability = availabilityRepository.findById(availabilityId)
+                .orElseThrow(() -> new RuntimeException("Availability not found"));
+
+        // Check if new availability is already booked
+        if (Boolean.TRUE.equals(newAvailability.getIsBooked())) {
+            throw new RuntimeException("This time slot is already booked");
+        }
+
+        // Verify doctor matches the new availability
+        if (!newAvailability.getDoctor().getId().equals(consultation.getDoctor().getId())) {
+            throw new RuntimeException("Doctor does not match the new availability");
+        }
+
+        // Update consultation details
+        existingConsultation.setDateConsultation(newAvailability.getStartTime());
+        existingConsultation.setMotif(consultation.getMotif());
+        existingConsultation.setDoctor(newAvailability.getDoctor());
+
+        // Only update patient if provided
+        if (consultation.getPatient() != null) {
+            existingConsultation.setPatient(consultation.getPatient());
+        }
+
+        // Mark new availability as booked
+        newAvailability.setIsBooked(true);
+        availabilityRepository.save(newAvailability);
+
+        // Save and return updated consultation
+        return consultationRepository.save(existingConsultation);
+    }    @Override
     public Boolean delete(UUID id) {
         consultationRepository.deleteById(id);
         return true;

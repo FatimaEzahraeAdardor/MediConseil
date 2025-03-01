@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface ConsultaionService {
     Consultation save(Consultation consultation, UUID availabilityId);
-    Consultation update(Consultation consultation);
+    Consultation update(Consultation consultation, UUID availabilityId);
     Boolean delete(UUID id);
     Optional<Consultation> findByID(UUID id);
     Page<Consultation> getAllConsultationsPaginated(int page, int size);

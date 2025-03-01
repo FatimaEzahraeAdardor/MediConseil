@@ -28,4 +28,5 @@ public class AvailabilityController {
         return ResponseEntity.ok(availabilityService.save(availability));
     }
 
+
 }
