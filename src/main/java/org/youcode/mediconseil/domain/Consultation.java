@@ -1,9 +1,12 @@
 package org.youcode.mediconseil.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.youcode.mediconseil.domain.enums.ConsultationStatus;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,18 +22,23 @@ public class Consultation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private LocalDate dateConsultation;
-    private String status;
+    @Future
+    @NotNull
+    private LocalDateTime dateConsultation;
+
+    @Enumerated(EnumType.STRING)
+    private ConsultationStatus status = ConsultationStatus.PENDING;
+
     private String motif;
 
     @ManyToOne
+    @NotNull
     private Doctor doctor;
 
     @ManyToOne
-    private User user;
+    @NotNull
+    private User patient;
 
-    @OneToMany(mappedBy = "consultation")
-    private List<Document> documents ;
-
-
+    @OneToMany(mappedBy = "consultation", cascade = CascadeType.ALL)
+    private List<Document> documents = new ArrayList<>();
 }

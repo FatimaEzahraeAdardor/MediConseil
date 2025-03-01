@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ConsultaionService {
-    Consultation save(Consultation consultation);
+    Consultation save(Consultation consultation, UUID availabilityId);
     Consultation update(Consultation consultation);
     Boolean delete(UUID id);
     Optional<Consultation> findByID(UUID id);

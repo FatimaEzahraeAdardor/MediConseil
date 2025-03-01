@@ -28,6 +28,7 @@ public class DoctorRequestVm {
     @NotNull(message = "City is required.")
     private UUID cityId;
 
+
     @NotBlank(message = "Phone number is required.")
     @Size(min = 10, max = 15, message = "Phone number must be between 10 and 15 characters.")
     private String phoneNumber;
@@ -54,4 +55,5 @@ public class DoctorRequestVm {
 
     @NotNull(message = "Specialty ID cannot be null")
     private UUID specialtyId;
+
 }

@@ -1,9 +1,11 @@
 package org.youcode.mediconseil.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -17,9 +19,18 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private LocalDate date;
-    private Boolean available;
+    @Future
+    @NotNull
+    private LocalDateTime startTime;
+
+    @Future
+    @NotNull
+    private LocalDateTime endTime;
+
+    @NotNull
+    private Boolean isBooked = false;
 
     @ManyToOne
+    @NotNull
     private Doctor doctor;
 }
