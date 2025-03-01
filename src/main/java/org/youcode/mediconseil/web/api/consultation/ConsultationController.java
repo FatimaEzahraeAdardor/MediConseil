@@ -87,4 +87,27 @@ class ConsultationController {
 
         return ResponseEntity.ok(responseVms);
     }
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<Map<String, Object>> cancelConsultation(@PathVariable UUID id) {
+        Consultation canceledConsultation = consultationService.cancelConsultation(id);
+        ConsultationResponseVm responseVm = consultationMapper.toVm(canceledConsultation);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Consultation canceled successfully");
+        response.put("consultation", responseVm);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/confirm")
+    public ResponseEntity<Map<String, Object>> confirmConsultation(@PathVariable UUID id) {
+        Consultation confirmedConsultation = consultationService.confirmConsultation(id);
+        ConsultationResponseVm responseVm = consultationMapper.toVm(confirmedConsultation);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Consultation confirmed successfully");
+        response.put("consultation", responseVm);
+
+        return ResponseEntity.ok(response);
+    }
 }

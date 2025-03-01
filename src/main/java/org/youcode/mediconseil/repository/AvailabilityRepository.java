@@ -8,12 +8,14 @@ import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.domain.Doctor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface AvailabilityRepository extends JpaRepository<Availability, UUID>{
     Page<Availability> findByDoctorIdAndIsBookedFalse(UUID doctorId, Pageable pageable);
+    Optional<Availability> findByDoctorAndStartTime(Doctor doctor, LocalDateTime startTime);
 
 
 }

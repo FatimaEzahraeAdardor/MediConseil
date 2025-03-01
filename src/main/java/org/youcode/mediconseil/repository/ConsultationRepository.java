@@ -8,4 +8,5 @@ import java.util.UUID;
 
     public interface ConsultationRepository extends JpaRepository<Consultation, UUID> {
 
+
 }
