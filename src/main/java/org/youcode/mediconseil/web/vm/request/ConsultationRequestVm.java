@@ -17,10 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConsultationRequestVm {
-    @NotNull(message = "Date consultation is required")
-    @FutureOrPresent(message = "Date consultation must be today or in the future")
-    private LocalDateTime dateConsultation;
-
     @NotBlank(message = "Motif is required")
     @Size(min = 10, max = 500, message = "Motif must be between 10 and 500 characters")
     private String motif;

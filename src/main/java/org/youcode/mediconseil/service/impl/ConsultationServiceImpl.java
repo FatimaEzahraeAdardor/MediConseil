@@ -38,12 +38,19 @@ public class ConsultationServiceImpl implements ConsultaionService {
             throw new RuntimeException("Doctor does not match the availability");
         }
 
+        // Explicitly set the consultation date to the availability start time
+        consultation.setDateConsultation(availability.getStartTime());
+
+        // Additional validation if needed
+        if (!consultation.getDateConsultation().equals(availability.getStartTime())) {
+            throw new RuntimeException("Consultation date must match availability start time");
+        }
+
         // Mark availability as booked
         availability.setIsBooked(true);
         availabilityRepository.save(availability);
 
-        // Set consultation details
-        consultation.setDateConsultation(availability.getStartTime());
+        // Ensure status is set to PENDING
         consultation.setStatus(ConsultationStatus.PENDING);
 
         // Save consultation

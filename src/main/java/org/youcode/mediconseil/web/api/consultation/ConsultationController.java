@@ -8,6 +8,7 @@ import org.youcode.mediconseil.domain.Consultation;
 import org.youcode.mediconseil.service.ConsultaionService;
 import org.youcode.mediconseil.web.vm.mapper.ConsultationMapper;
 import org.youcode.mediconseil.web.vm.request.ConsultationRequestVm;
+import org.youcode.mediconseil.web.vm.response.ConsultationResponseVm;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ class ConsultationController {
 
         Consultation consultation = consultationMapper.toEntity(consultationRequestVm);
         Consultation bookedConsultation = consultationService.save(consultation, consultationRequestVm.getAvailabilityId());
+        ConsultationResponseVm responseVm = consultationMapper.toVm(bookedConsultation);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Consultation created successfully");
