@@ -101,6 +101,11 @@ public class ConsultationServiceImpl implements ConsultaionService {
         return consultationRepository.save(existingConsultation);
     }    @Override
     public Boolean delete(UUID id) {
+        Consultation existingConsultation = consultationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Consultation not found"));
+        if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
+            throw new RuntimeException("Only PENDING consultations can be deleted");
+        }
         consultationRepository.deleteById(id);
         return true;
     }

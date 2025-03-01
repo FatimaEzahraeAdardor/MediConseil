@@ -1,6 +1,7 @@
 package org.youcode.mediconseil.web.api.consultation;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +36,15 @@ class ConsultationController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Consultation created successfully");
-        response.put("consultation", bookedConsultation);
+        response.put("consultation", responseVm);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateConsultation(
             @PathVariable UUID id,
-            @RequestBody ConsultationRequestVm consultationRequest) {
+            @Valid @RequestBody ConsultationRequestVm consultationRequest) {
 
         Consultation consultation = consultationMapper.toEntity(consultationRequest);
         consultation.setId(id);
@@ -54,6 +56,35 @@ class ConsultationController {
         response.put("message", "Consultation updated successfully");
         response.put("consultation", responseVm);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ConsultationResponseVm> findById(@PathVariable UUID id) {
+        Consultation consultation = consultationService.findByID(id)
+                .orElseThrow(() -> new RuntimeException("Consultation not found"));
+        ConsultationResponseVm responseVm = consultationMapper.toVm(consultation);
+        return ResponseEntity.ok(responseVm);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> delete(@PathVariable UUID id) {
+        consultationService.delete(id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Consultation deleted successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping()
+    public ResponseEntity<Page<ConsultationResponseVm>> getAllConsultations(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Consultation> consultations = consultationService.getAllConsultationsPaginated(page, size);
+        Page<ConsultationResponseVm> responseVms = consultations.map(consultationMapper::toVm);
+
+        return ResponseEntity.ok(responseVms);
     }
 }
