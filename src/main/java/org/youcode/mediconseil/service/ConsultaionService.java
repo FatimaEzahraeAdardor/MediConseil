@@ -13,4 +13,5 @@ public interface ConsultaionService {
     Boolean delete(UUID id);
     Optional<Consultation> findByID(UUID id);
     Page<Consultation> getAllConsultationsPaginated(int page, int size);
+    public Page<Consultation> getConsultationsByDoctorId(UUID doctorId, int page, int size);
 }

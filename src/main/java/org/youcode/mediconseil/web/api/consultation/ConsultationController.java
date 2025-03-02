@@ -110,4 +110,15 @@ class ConsultationController {
 
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<Page<ConsultationResponseVm>> getConsultationsByDoctor(
+            @PathVariable UUID doctorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Consultation> consultations = consultationService.getConsultationsByDoctorId(doctorId, page, size);
+        Page<ConsultationResponseVm> responseVms = consultations.map(consultationMapper::toVm);
+
+        return ResponseEntity.ok(responseVms);
+    }
 }

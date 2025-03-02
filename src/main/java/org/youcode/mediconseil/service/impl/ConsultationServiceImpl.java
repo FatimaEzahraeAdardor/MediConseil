@@ -3,13 +3,16 @@ package org.youcode.mediconseil.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.domain.Consultation;
+import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.domain.enums.ConsultationStatus;
 import org.youcode.mediconseil.repository.AvailabilityRepository;
 import org.youcode.mediconseil.repository.ConsultationRepository;
+import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.service.ConsultaionService;
 
 import java.util.Optional;
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class ConsultationServiceImpl implements ConsultaionService {
     private final ConsultationRepository consultationRepository;
     private final AvailabilityRepository availabilityRepository;
+    private final DoctorRepository doctorRepository;
 
     @Override
     @Transactional
@@ -176,5 +180,16 @@ public class ConsultationServiceImpl implements ConsultaionService {
     @Override
     public Page<Consultation> getAllConsultationsPaginated(int page, int size) {
         return consultationRepository.findAll(PageRequest.of(page, size));
+    }
+    @Override
+    public Page<Consultation> getConsultationsByDoctorId(UUID doctorId, int page, int size) {
+        // Verify doctor exists
+        doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Find consultations by doctor
+        return consultationRepository.getConsultationsByDoctorId(doctorId, pageable);
     }
 }
