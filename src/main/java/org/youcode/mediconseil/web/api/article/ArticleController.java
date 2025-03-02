@@ -83,5 +83,16 @@ public class ArticleController {
 
         return ResponseEntity.ok(responseVms);
     }
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<Page<ArticleResponseVm>> getArticlesByDoctor(
+            @PathVariable UUID doctorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Article> articles = articleService.getAllArticlesByDoctorId(doctorId, page, size);
+        Page<ArticleResponseVm> responseVms = articles.map(articleMapper::toVm);
+
+        return ResponseEntity.ok(responseVms);
+    }
 
 }
