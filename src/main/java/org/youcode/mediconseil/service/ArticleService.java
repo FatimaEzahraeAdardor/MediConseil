@@ -12,5 +12,7 @@ public interface ArticleService {
     Boolean delete(UUID id);
     Optional<Article> findById(UUID id);
     Page<Article> getAllArticlesPaginated(int page, int size);
+    Page<Article> getAllArticlesByDoctorId(UUID doctorId, int page, int size);
+    Page<Article> getAllArticlesByCategoryId(UUID categoryId, int page, int size);
 
 }
