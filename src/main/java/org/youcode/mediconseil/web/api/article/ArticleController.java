@@ -54,5 +54,34 @@ public class ArticleController {
 
         return ResponseEntity.ok(response);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> deleteArticle(@PathVariable UUID id) {
+        articleService.delete(id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Article deleted successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleResponseVm> getArticleById(@PathVariable UUID id) {
+        Article article = articleService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Article not found"));
+
+        ArticleResponseVm responseVm = articleMapper.toVm(article);
+        return ResponseEntity.ok(responseVm);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ArticleResponseVm>> getAllArticles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Article> articles = articleService.getAllArticlesPaginated(page, size);
+        Page<ArticleResponseVm> responseVms = articles.map(articleMapper::toVm);
+
+        return ResponseEntity.ok(responseVms);
+    }
 
 }
