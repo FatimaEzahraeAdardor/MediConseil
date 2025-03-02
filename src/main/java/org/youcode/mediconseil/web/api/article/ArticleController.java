@@ -94,5 +94,15 @@ public class ArticleController {
 
         return ResponseEntity.ok(responseVms);
     }
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ArticleResponseVm>> getArticlesByCategory(
+            @PathVariable UUID categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
+        Page<Article> articles = articleService.getAllArticlesByCategoryId(categoryId, page, size);
+        Page<ArticleResponseVm> responseVms = articles.map(articleMapper::toVm);
+
+        return ResponseEntity.ok(responseVms);
+    }
 }
