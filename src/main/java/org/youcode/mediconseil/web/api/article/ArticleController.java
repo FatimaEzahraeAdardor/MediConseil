@@ -38,5 +38,21 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateArticle(
+            @PathVariable UUID id,
+            @Valid @RequestBody ArticleRequestVm articleRequestVm) {
+
+        Article article = articleMapper.toEntity(articleRequestVm);
+        article.setId(id);
+        Article updatedArticle = articleService.update(article);
+        ArticleResponseVm responseVm = articleMapper.toVm(updatedArticle);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Article updated successfully");
+        response.put("article", responseVm);
+
+        return ResponseEntity.ok(response);
+    }
 
 }
