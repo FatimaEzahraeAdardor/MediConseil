@@ -14,11 +14,9 @@ import org.youcode.mediconseil.repository.ConsultationRepository;
 import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.service.ConsultaionService;
 import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
-import org.youcode.mediconseil.web.exception.consultation.ConsultationDateMismatchException;
-import org.youcode.mediconseil.web.exception.consultation.DoctorMismatchException;
-import org.youcode.mediconseil.web.exception.consultation.InvalidConsultationStatusException;
-import org.youcode.mediconseil.web.exception.consultation.TimeSlotAlreadyBookedException;
+import org.youcode.mediconseil.web.exception.consultation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -164,7 +162,12 @@ public class ConsultationServiceImpl implements ConsultaionService {
         // Find existing consultation
         Consultation existingConsultation = consultationRepository.findById(consultationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Consultation not found"));
-
+        // Check if consultation start date is in the future
+        LocalDateTime now = LocalDateTime.now();
+        if (existingConsultation.getDateConsultation().isBefore(now)) {
+            throw new PastConsultationException(
+                    "Cannot confirm a consultation with a past date.");
+        }
         // Check if consultation is in PENDING status
         if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
             throw new InvalidConsultationStatusException("Only PENDING consultations can be confirmed");

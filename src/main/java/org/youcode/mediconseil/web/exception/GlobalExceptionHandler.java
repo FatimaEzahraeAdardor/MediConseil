@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.youcode.mediconseil.web.exception.consultation.ConsultationDateMismatchException;
-import org.youcode.mediconseil.web.exception.consultation.DoctorMismatchException;
-import org.youcode.mediconseil.web.exception.consultation.InvalidConsultationStatusException;
-import org.youcode.mediconseil.web.exception.consultation.TimeSlotAlreadyBookedException;
+import org.youcode.mediconseil.web.exception.consultation.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,6 +36,10 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(InvalidConsultationStatusException.class)
     public ResponseEntity<String> handleInvalidConsultationStatusException(InvalidConsultationStatusException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(PastConsultationException.class)
+    public ResponseEntity<String> handlePastConsultationException(PastConsultationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
