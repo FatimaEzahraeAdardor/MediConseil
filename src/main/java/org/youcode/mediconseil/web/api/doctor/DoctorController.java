@@ -1,6 +1,7 @@
 package org.youcode.mediconseil.web.api.doctor;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.web.vm.mapper.DoctorMapper;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
+import org.youcode.mediconseil.web.vm.response.ConsultationResponseVm;
+import org.youcode.mediconseil.web.vm.response.DoctorResponseVm;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,4 +52,13 @@ public class DoctorController {
         doctorService.delete(id);
         return ResponseEntity.ok("Deleted doctor successfully");
     }
-}
+    @GetMapping()
+    public ResponseEntity<Page<DoctorResponseVm>> getAllDoctors(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Doctor> doctorPage = doctorService.getAllDoctorsPaginated(page, size);
+        Page<DoctorResponseVm> doctorResponseVms = doctorPage.map(doctorMapper::toVm);
+        return ResponseEntity.ok(doctorResponseVms);
+    }
+
+    }

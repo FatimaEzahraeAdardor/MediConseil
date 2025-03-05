@@ -1,6 +1,8 @@
 package org.youcode.mediconseil.service.impl;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.*;
@@ -93,7 +95,8 @@ public class DoctorServiceImp implements DoctorService {
 
     @Override
     public Page<Doctor> getAllDoctorsPaginated(int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        return doctorRepository.findAll(pageable);
     }
 
     @Override

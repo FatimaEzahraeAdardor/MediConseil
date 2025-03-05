@@ -1,11 +1,13 @@
 package org.youcode.mediconseil.web.vm.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
+import org.youcode.mediconseil.web.vm.response.DoctorResponseVm;
 
 @Mapper(componentModel = "spring")
 
@@ -49,4 +51,7 @@ public interface DoctorMapper {
 
                 return doctor;
         }
+        @Mapping(target = "specialty", source = "speciality")
+        @Mapping(target = "city", source = "city")
+        DoctorResponseVm toVm(Doctor doctor);
 }
