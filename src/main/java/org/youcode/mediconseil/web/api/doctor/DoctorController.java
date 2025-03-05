@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.youcode.mediconseil.domain.Article;
+import org.youcode.mediconseil.domain.Category;
 import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.service.DoctorService;
@@ -14,11 +15,13 @@ import org.youcode.mediconseil.web.vm.mapper.DoctorMapper;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
 import org.youcode.mediconseil.web.vm.response.ArticleResponseVm;
+import org.youcode.mediconseil.web.vm.response.CategoryResponseVM;
 import org.youcode.mediconseil.web.vm.response.ConsultationResponseVm;
 import org.youcode.mediconseil.web.vm.response.DoctorResponseVm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -48,6 +51,12 @@ public class DoctorController {
         response.put("user", savedDoctor);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<DoctorResponseVm> findById(@PathVariable UUID id) {
+        Optional<Doctor> doctor = doctorService.findById(id);
+        DoctorResponseVm doctorResponseVm = doctorMapper.toVm(doctor.get());
+        return ResponseEntity.ok(doctorResponseVm);
     }
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String > delete(@PathVariable UUID id) {
