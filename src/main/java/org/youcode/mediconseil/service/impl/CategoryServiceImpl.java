@@ -7,7 +7,7 @@ import org.youcode.mediconseil.domain.Category;
 import org.youcode.mediconseil.repository.CategoryRepository;
 import org.youcode.mediconseil.service.CategoryService;
 import org.youcode.mediconseil.web.exception.AlreadyExistException;
-import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category save(Category category) {
         if (category == null) {
-            throw new InvalidObjectExeption("Category cannot be null");
+            throw new ResourceNotFoundException("Category cannot be null");
         }
         Optional<Category> existingCategory = categoryRepository.findByName(category.getName());
         if (existingCategory.isPresent()) {
@@ -35,10 +35,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category update(UUID id, Category category) {
         if (category == null || id == null) {
-            throw new InvalidObjectExeption("Category and ID must not be null");
+            throw new ResourceNotFoundException("Category and ID must not be null");
         }
         Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         Optional<Category> duplicateCategory = categoryRepository.findByName(category.getName());
         if (duplicateCategory.isPresent() && !duplicateCategory.get().getId().equals(id)) {
             throw new AlreadyExistException("A category with the same name already exists");
@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Boolean delete(UUID id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("category not found"));
         categoryRepository.delete(category);
         return true;
     }
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryOptional.isPresent()) {
             return categoryOptional;
         }else {
-            throw new InvalidObjectExeption("category not found");
+            throw new ResourceNotFoundException("category not found");
         }
 
     }

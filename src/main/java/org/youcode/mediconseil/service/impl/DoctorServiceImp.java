@@ -4,12 +4,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.*;
-import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.service.SpecialityService;
-import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class DoctorServiceImp implements DoctorService {
     @Override
     public Doctor save(Doctor doctor) {
         if (doctor== null) {
-            throw new InvalidObjectExeption("Doctor cannot be null");
+            throw new ResourceNotFoundException("Doctor cannot be null");
         }
         return doctorRepository.save(doctor);
 
@@ -77,7 +76,7 @@ public class DoctorServiceImp implements DoctorService {
     @Override
     public Boolean delete(UUID id) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("doctor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("doctor not found"));
         doctorRepository.delete(doctor);
         return true;
     }
@@ -88,7 +87,7 @@ public class DoctorServiceImp implements DoctorService {
         if (doctorOptional.isPresent()) {
             return doctorOptional;
         } else {
-            throw new InvalidObjectExeption("city not found");
+            throw new ResourceNotFoundException("city not found");
         }
     }
 

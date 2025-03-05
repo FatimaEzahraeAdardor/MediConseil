@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
-import org.youcode.mediconseil.domain.Doctor;
-import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.UserRepository;
@@ -15,8 +13,7 @@ import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.service.UserService;
-import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
-import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
 
 import java.util.Optional;
@@ -80,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean delete(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("user not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
         userRepository.delete(user);
         return true;
     }
@@ -91,7 +88,7 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             return userOptional;
         } else {
-            throw new InvalidObjectExeption("user not found");
+            throw new ResourceNotFoundException("user not found");
         }
     }
     @Override

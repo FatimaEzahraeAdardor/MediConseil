@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.domain.Consultation;
-import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.domain.enums.ConsultationStatus;
 import org.youcode.mediconseil.repository.AvailabilityRepository;
 import org.youcode.mediconseil.repository.ConsultationRepository;
 import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.service.ConsultaionService;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
+import org.youcode.mediconseil.web.exception.consultation.ConsultationDateMismatchException;
+import org.youcode.mediconseil.web.exception.consultation.DoctorMismatchException;
+import org.youcode.mediconseil.web.exception.consultation.InvalidConsultationStatusException;
+import org.youcode.mediconseil.web.exception.consultation.TimeSlotAlreadyBookedException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -31,16 +35,16 @@ public class ConsultationServiceImpl implements ConsultaionService {
     public Consultation save(Consultation consultation, UUID availabilityId) {
         // Find the availability
         Availability availability = availabilityRepository.findById(availabilityId)
-                .orElseThrow(() -> new RuntimeException("Availability not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Availability not found"));
 
         // Check if availability is already booked
         if (Boolean.TRUE.equals(availability.getIsBooked())) {
-            throw new RuntimeException("This time slot is already booked");
+            throw new TimeSlotAlreadyBookedException("This time slot is already booked");
         }
 
         // Verify doctor matches the availability
         if (!availability.getDoctor().getId().equals(consultation.getDoctor().getId())) {
-            throw new RuntimeException("Doctor does not match the availability");
+            throw new DoctorMismatchException("Doctor does not match the availability");
         }
 
         // Explicitly set the consultation date to the availability start time
@@ -48,7 +52,7 @@ public class ConsultationServiceImpl implements ConsultaionService {
 
         // Additional validation if needed
         if (!consultation.getDateConsultation().equals(availability.getStartTime())) {
-            throw new RuntimeException("Consultation date must match availability start time");
+            throw new ConsultationDateMismatchException("Consultation date must match availability start time");
         }
 
         // Mark availability as booked
@@ -76,16 +80,16 @@ public class ConsultationServiceImpl implements ConsultaionService {
 
         // Find the new availability
         Availability newAvailability = availabilityRepository.findById(availabilityId)
-                .orElseThrow(() -> new RuntimeException("Availability not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Availability not found"));
 
         // Check if new availability is already booked
         if (Boolean.TRUE.equals(newAvailability.getIsBooked())) {
-            throw new RuntimeException("This time slot is already booked");
+            throw new TimeSlotAlreadyBookedException("This time slot is already booked");
         }
 
         // Verify doctor matches the new availability
         if (!newAvailability.getDoctor().getId().equals(consultation.getDoctor().getId())) {
-            throw new RuntimeException("Doctor does not match the new availability");
+            throw new DoctorMismatchException("Doctor does not match the new availability");
         }
         // Find and update the associated availability
         Availability availability = availabilityRepository.findByDoctorAndStartTime(
@@ -119,7 +123,7 @@ public class ConsultationServiceImpl implements ConsultaionService {
         Consultation existingConsultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Consultation not found"));
         if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new RuntimeException("Only PENDING consultations can be deleted");
+            throw new InvalidConsultationStatusException("Only PENDING consultations can be deleted");
         }
         consultationRepository.deleteById(id);
         return true;
@@ -129,11 +133,11 @@ public class ConsultationServiceImpl implements ConsultaionService {
     public Consultation cancelConsultation(UUID consultationId) {
         // Find existing consultation
         Consultation existingConsultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new RuntimeException("Consultation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found"));
 
         // Check if consultation is in PENDING status
         if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new RuntimeException("Only PENDING consultations can be canceled");
+            throw new InvalidConsultationStatusException("Only PENDING consultations can be canceled");
         }
 
         // Update consultation status to CANCELED
@@ -159,11 +163,11 @@ public class ConsultationServiceImpl implements ConsultaionService {
     public Consultation confirmConsultation(UUID consultationId) {
         // Find existing consultation
         Consultation existingConsultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new RuntimeException("Consultation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found"));
 
         // Check if consultation is in PENDING status
         if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new RuntimeException("Only PENDING consultations can be confirmed");
+            throw new InvalidConsultationStatusException("Only PENDING consultations can be confirmed");
         }
 
         // Update consultation status to CONFIRMED
@@ -191,7 +195,7 @@ public class ConsultationServiceImpl implements ConsultaionService {
     public Page<Consultation> getConsultationsByDoctorId(UUID doctorId, int page, int size) {
         // Verify doctor exists
         doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         Pageable pageable = PageRequest.of(page, size);
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.repository.AvailabilityRepository;
 import org.youcode.mediconseil.service.AvailabiityService;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class AvailabilityServiceImpl implements AvailabiityService {
     @Override
     public Availability update(UUID id, Availability availability) {
         Availability existingAvailability = availabilityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Availability not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Availability not found"));
 
         existingAvailability.setStartTime(availability.getStartTime());
         existingAvailability.setEndTime(availability.getEndTime());

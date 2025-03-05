@@ -12,6 +12,7 @@ import org.youcode.mediconseil.repository.ArticleRepository;
 import org.youcode.mediconseil.repository.CategoryRepository;
 import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.service.ArticleService;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,11 +29,11 @@ public class ArticleServiceImpl implements ArticleService {
     public Article save(Article article) {
         // Validate category
         Category category = categoryRepository.findById(article.getCategory().getId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         // Validate doctor
         Doctor doctor = doctorRepository.findById(article.getDoctor().getId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         // Set validated entities
         article.setCategory(category);
@@ -46,7 +47,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Article update(Article article) {
         // Find existing article
         Article existingArticle = articleRepository.findById(article.getId())
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
         // Update article details
         existingArticle.setTitle(article.getTitle());
@@ -56,14 +57,14 @@ public class ArticleServiceImpl implements ArticleService {
         // Update category if provided
         if (article.getCategory() != null) {
             Category category = categoryRepository.findById(article.getCategory().getId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
             existingArticle.setCategory(category);
         }
 
         // Update doctor if provided
         if (article.getDoctor() != null) {
             Doctor doctor = doctorRepository.findById(article.getDoctor().getId())
-                    .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
             existingArticle.setDoctor(doctor);
         }
 
@@ -74,7 +75,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public Boolean delete(UUID id) {
         if (!articleRepository.existsById(id)) {
-            throw new RuntimeException("Article not found");
+            throw new ResourceNotFoundException("Article not found");
         }
         articleRepository.deleteById(id);
         return true;
@@ -94,7 +95,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Page<Article> getAllArticlesByDoctorId(UUID doctorId, int page, int size) {
         // Verify doctor exists
         if (!doctorRepository.existsById(doctorId)) {
-            throw new RuntimeException("Doctor not found");
+            throw new ResourceNotFoundException("Doctor not found");
         }
 
         return articleRepository.findByDoctorId(doctorId, PageRequest.of(page, size));
@@ -104,7 +105,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Page<Article> getAllArticlesByCategoryId(UUID categoryId, int page, int size) {
         // Verify category exists
         if (!categoryRepository.existsById(categoryId)) {
-            throw new RuntimeException("Category not found");
+            throw new ResourceNotFoundException("Category not found");
         }
 
         return articleRepository.findByCategoryId(categoryId, PageRequest.of(page, size));

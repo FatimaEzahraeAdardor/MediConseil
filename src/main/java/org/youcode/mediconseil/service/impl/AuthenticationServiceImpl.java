@@ -8,30 +8,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.User;
-import org.youcode.mediconseil.domain.enums.Role;
 import org.youcode.mediconseil.repository.UserRepository;
 import org.youcode.mediconseil.security.JwtService;
 import org.youcode.mediconseil.service.AuthService;
 import org.youcode.mediconseil.service.CityService;
-import org.youcode.mediconseil.service.DoctorService;
-import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.web.vm.request.AuthenticationRequest;
-import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
 import org.youcode.mediconseil.web.vm.response.AuthenticationResponse;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImp implements AuthService {
+public class AuthenticationServiceImpl implements AuthService {
     private final UserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final CityService cityService;
     private final AuthenticationManager authenticationManager;
-    private final DoctorService doctorService;
-    private final SpecialityService specialityService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         City city = cityService.findById(request.getCity_id())

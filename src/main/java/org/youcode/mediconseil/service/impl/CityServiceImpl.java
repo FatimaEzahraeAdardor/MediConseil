@@ -5,16 +5,16 @@ import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.repository.CityRepository;
 import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.web.exception.AlreadyExistException;
-import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Service
-public class CityServiceImp implements CityService {
+public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
-    public CityServiceImp(CityRepository cityRepository) {
+    public CityServiceImpl(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
     }
 
@@ -29,7 +29,7 @@ public class CityServiceImp implements CityService {
     @Override
     public City update(UUID id, City city) {
         City foundCity = cityRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("city not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("city not found"));
         if (cityRepository.existsByName(city.getName())) {
             throw new AlreadyExistException("this city already exist");
         }
@@ -40,7 +40,7 @@ public class CityServiceImp implements CityService {
     @Override
     public Boolean delete(UUID id) {
         City city = cityRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("city not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("city not found"));
         cityRepository.delete(city);
         return true;
     }
@@ -51,7 +51,7 @@ public class CityServiceImp implements CityService {
         if (cityOptional.isPresent()) {
             return cityOptional;
         } else {
-            throw new InvalidObjectExeption("city not found");
+            throw new ResourceNotFoundException("city not found");
         }
     }
 

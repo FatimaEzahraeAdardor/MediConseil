@@ -8,7 +8,7 @@ import org.youcode.mediconseil.domain.Speciality;
 import org.youcode.mediconseil.repository.SpecialityRepository;
 import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.web.exception.AlreadyExistException;
-import org.youcode.mediconseil.web.exception.InvalidObjectExeption;
+import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +21,7 @@ public class SpecialityServiceImp implements SpecialityService {
     @Override
     public Speciality save(Speciality speciality) {
         if (speciality == null) {
-            throw new InvalidObjectExeption("speciality cannot be null");
+            throw new ResourceNotFoundException("speciality cannot be null");
         }
         Optional<Speciality> existingSpeciality = specialityRepository.findByName(speciality.getName());
         if (existingSpeciality.isPresent()) {
@@ -32,7 +32,7 @@ public class SpecialityServiceImp implements SpecialityService {
 
     @Override
     public Speciality update(UUID id, Speciality speciality) {
-        Speciality existingSpeciality = specialityRepository.findById(id).orElseThrow(() -> new InvalidObjectExeption("Speciality not found"));
+        Speciality existingSpeciality = specialityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Speciality not found"));
         if (specialityRepository.existsByName(speciality.getName())) {
             throw new AlreadyExistException("this speciality already exist");
         }
@@ -44,7 +44,7 @@ public class SpecialityServiceImp implements SpecialityService {
     @Override
     public Boolean delete(UUID id) {
         Speciality speciality = specialityRepository.findById(id)
-                .orElseThrow(() -> new InvalidObjectExeption("speciality not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("speciality not found"));
         specialityRepository.delete(speciality);
         return true;
     }
@@ -55,7 +55,7 @@ public class SpecialityServiceImp implements SpecialityService {
         if (specialityOptional.isPresent()) {
             return specialityOptional;
         } else {
-            throw new InvalidObjectExeption("speciality not found");
+            throw new ResourceNotFoundException("speciality not found");
         }
     }
 
