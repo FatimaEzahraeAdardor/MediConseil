@@ -14,7 +14,7 @@ public interface DoctorService {
     Boolean delete(UUID id);
     Optional<Doctor> findById(UUID id);
     Page<Doctor> getAllDoctorsPaginated(int page, int size);
-    Page<Doctor> getDoctorsByCategory(Category category, int page, int size);
+    Page<Doctor> getDoctorsBySpecialty(UUID categoryId, int page, int size);
 
 
 }

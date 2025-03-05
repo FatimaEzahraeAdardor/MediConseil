@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.*;
+import org.youcode.mediconseil.repository.CategoryRepository;
 import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.service.DoctorService;
@@ -20,14 +21,16 @@ public class DoctorServiceImp implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final CityService cityService;
     private final SpecialityService specialityService;
+
     public DoctorServiceImp(DoctorRepository doctorRepository, CityService cityService, SpecialityService specialityService) {
         this.doctorRepository = doctorRepository;
         this.cityService = cityService;
         this.specialityService = specialityService;
     }
+
     @Override
     public Doctor save(Doctor doctor) {
-        if (doctor== null) {
+        if (doctor == null) {
             throw new ResourceNotFoundException("Doctor cannot be null");
         }
         return doctorRepository.save(doctor);
@@ -35,7 +38,7 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public Doctor update(UUID doctorId,DoctorRequestVm doctor) {
+    public Doctor update(UUID doctorId, DoctorRequestVm doctor) {
 
         // Fetch existing doctor
         Doctor existingDoctor = doctorRepository.findById(doctorId)
@@ -52,7 +55,6 @@ public class DoctorServiceImp implements DoctorService {
                     .orElseThrow(() -> new IllegalArgumentException("specialty not found with ID: " + doctor.getSpecialtyId()));
             existingDoctor.setSpeciality(speciality);
         }
-
 
 
         // Update general user details
@@ -100,7 +102,12 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public Page<Doctor> getDoctorsByCategory(Category category, int page, int size) {
-        return null;
+    public Page<Doctor> getDoctorsBySpecialty(UUID specialtyId, int page, int size) {
+        if (specialtyId != null) {
+            Speciality speciality = specialityService.findById(specialtyId)
+                    .orElseThrow(() -> new IllegalArgumentException("specialty not found with ID: "));
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return doctorRepository.findBySpecialityId(specialtyId,pageable);
     }
 }

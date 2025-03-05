@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.youcode.mediconseil.domain.Article;
 import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.web.vm.mapper.DoctorMapper;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 import org.youcode.mediconseil.web.vm.request.RegisterRequest;
+import org.youcode.mediconseil.web.vm.response.ArticleResponseVm;
 import org.youcode.mediconseil.web.vm.response.ConsultationResponseVm;
 import org.youcode.mediconseil.web.vm.response.DoctorResponseVm;
 
@@ -59,6 +61,17 @@ public class DoctorController {
         Page<Doctor> doctorPage = doctorService.getAllDoctorsPaginated(page, size);
         Page<DoctorResponseVm> doctorResponseVms = doctorPage.map(doctorMapper::toVm);
         return ResponseEntity.ok(doctorResponseVms);
+    }
+    @GetMapping("/specialty/{specialtyId}")
+    public ResponseEntity<Page<DoctorResponseVm>> getDoctorsBySpecialty(
+            @PathVariable UUID specialtyId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Doctor> doctors = doctorService.getDoctorsBySpecialty(specialtyId, page, size);
+        Page<DoctorResponseVm> responseVms = doctors.map(doctorMapper::toVm);
+
+        return ResponseEntity.ok(responseVms);
     }
 
     }
