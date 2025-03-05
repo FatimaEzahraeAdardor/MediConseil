@@ -24,6 +24,7 @@ public class ConsultationServiceImpl implements ConsultaionService {
     private final ConsultationRepository consultationRepository;
     private final AvailabilityRepository availabilityRepository;
     private final DoctorRepository doctorRepository;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -169,7 +170,12 @@ public class ConsultationServiceImpl implements ConsultaionService {
         existingConsultation.setStatus(ConsultationStatus.CONFIRMED);
 
         // Save and return updated consultation
-        return consultationRepository.save(existingConsultation);
+        Consultation confirmedConsultation = consultationRepository.save(existingConsultation);
+
+        // Send confirmation email
+        emailService.sendConsultationConfirmationEmail(confirmedConsultation);
+
+        return confirmedConsultation;
     }
 
     @Override
