@@ -82,34 +82,34 @@ public class EmailService {
                 : "Not provided";
 
         return String.format("""
-            <!DOCTYPE html>
-            <html>
-            <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <div style="background-color: #f4f4f4; padding: 20px; text-align: center;">
-                    <h2 style="color: #333;">Consultation Confirmation</h2>
-                </div>
-                <div style="padding: 20px;">
-                    <p>Dear %s,</p>
-                    <p>Your consultation has been confirmed with the following details:</p>
-                    <table style="width: 100%%; border-collapse: collapse; margin-top: 20px;">
-                        <tr>
-                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Doctor:</strong></td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Date:</strong></td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Motif:</strong></td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
-                        </tr>
-                    </table>
-                    <p style="margin-top: 20px;">Thank you for choosing MediConseil.</p>
-                </div>
-            </body>
-            </html>
-            """,
+                        <!DOCTYPE html>
+                        <html>
+                        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                            <div style="background-color: #f4f4f4; padding: 20px; text-align: center;">
+                                <h2 style="color: #333;">Consultation Confirmation</h2>
+                            </div>
+                            <div style="padding: 20px;">
+                                <p>Dear %s,</p>
+                                <p>Your consultation has been confirmed with the following details:</p>
+                                <table style="width: 100%%; border-collapse: collapse; margin-top: 20px;">
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Doctor:</strong></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Date:</strong></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Motif:</strong></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                                    </tr>
+                                </table>
+                                <p style="margin-top: 20px;">Thank you for choosing MediConseil.</p>
+                            </div>
+                        </body>
+                        </html>
+                        """,
                 patientName,
                 doctorName,
                 consultationDate,

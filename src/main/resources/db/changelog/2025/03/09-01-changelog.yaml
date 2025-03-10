@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741518189469-3
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+              - column:
+                  name: file_size
+                  type: BIGINT
+              - column:
+                  name: file_url
+                  type: VARCHAR(255)
+            tableName: document
+  - changeSet:
+      id: 1741518189469-5
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: file_size
+            tableName: document
+  - changeSet:
+      id: 1741518189469-1
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: date_generation
+            tableName: document
+  - changeSet:
+      id: 1741518189469-2
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: date_generation
+                  type: DATETIME
+            tableName: document
+
