@@ -41,7 +41,7 @@ public class User implements UserDetails {
 
     private String phoneNumber;
 
-    @Column(name = "image_url")
+    @Column(columnDefinition = "TEXT")
     private String image;
 
     @Enumerated(EnumType.STRING)
