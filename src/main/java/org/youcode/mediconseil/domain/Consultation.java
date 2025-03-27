@@ -23,7 +23,6 @@ public class Consultation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Future
     @NotNull
     private LocalDateTime dateConsultation;
 

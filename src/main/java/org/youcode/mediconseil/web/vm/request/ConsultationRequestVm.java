@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,8 +23,12 @@ public class ConsultationRequestVm {
     @NotNull(message = "Availability ID is required")
     private UUID availabilityId;
 
+    @NotNull(message = "Date consultation is required")
+    @FutureOrPresent(message = "Consultation date must be in the present or future")
+    private LocalDateTime dateConsultation;
+
     @NotNull(message = "Doctor ID is required")
-    private UUID doctorId;  // Ensure this matches the method in mapper
+    private UUID doctorId;
 
     @NotNull(message = "Patient ID is required")
     private UUID patientId;
