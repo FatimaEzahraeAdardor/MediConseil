@@ -60,11 +60,6 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         }
 
-        // Handle role updates
-        Role previousRole = existingUser.getRole();
-        if (user.getRole() != null && user.getRole() != previousRole) {
-            existingUser.setRole(user.getRole());
-        }
         // Save updated user
         existingUser = userRepository.save(existingUser);
         return existingUser;
@@ -95,5 +90,11 @@ public class UserServiceImpl implements UserService {
     public Page<User> getAllUsersPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<User> getAllPatientsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAllPatients(pageable);
     }
 }
