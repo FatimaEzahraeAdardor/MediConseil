@@ -2,6 +2,8 @@ package org.youcode.mediconseil.web.vm.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.domain.Speciality;
@@ -11,9 +13,11 @@ import org.youcode.mediconseil.web.vm.response.DoctorResponseVm;
 
 @Mapper(componentModel = "spring")
 
-public interface DoctorMapper {
+public abstract class DoctorMapper {
+        @Autowired
+        private  PasswordEncoder passwordEncoder;
 
-        default Doctor toEntity(DoctorRequestVm doctorRequestVm) {
+        public Doctor toEntity(DoctorRequestVm doctorRequestVm) {
                 if (doctorRequestVm == null) {
                         return null;
                 }
@@ -23,11 +27,12 @@ public interface DoctorMapper {
 
                 // Map User (Superclass) fields
                 doctor.setUserName(doctorRequestVm.getUserName());
-                doctor.setPassword(doctorRequestVm.getPassword());
+                doctor.setPassword(passwordEncoder.encode(doctorRequestVm.getPassword()));
                 doctor.setFirstName(doctorRequestVm.getFirstName());
                 doctor.setLastName(doctorRequestVm.getLastName());
                 doctor.setEmail(doctorRequestVm.getEmail());
                 doctor.setPhoneNumber(doctorRequestVm.getPhoneNumber());
+                doctor.setImage(doctorRequestVm.getImage());
                 doctor.setRole(Role.DOCTOR); // Assuming Role is an ENUM
 
                 // Map Doctor-specific fields
@@ -53,5 +58,5 @@ public interface DoctorMapper {
         }
         @Mapping(target = "specialty", source = "speciality")
         @Mapping(target = "city", source = "city")
-        DoctorResponseVm toVm(Doctor doctor);
+       public abstract DoctorResponseVm toVm(Doctor doctor);
 }

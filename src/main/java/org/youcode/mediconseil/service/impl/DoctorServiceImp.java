@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.*;
 import org.youcode.mediconseil.repository.CategoryRepository;
 import org.youcode.mediconseil.repository.DoctorRepository;
+import org.youcode.mediconseil.repository.UserRepository;
 import org.youcode.mediconseil.service.CityService;
 import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Service
@@ -21,11 +23,13 @@ public class DoctorServiceImp implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final CityService cityService;
     private final SpecialityService specialityService;
+    private final UserRepository userRepository;
 
-    public DoctorServiceImp(DoctorRepository doctorRepository, CityService cityService, SpecialityService specialityService) {
+    public DoctorServiceImp(DoctorRepository doctorRepository, CityService cityService, SpecialityService specialityService, UserRepository userRepository) {
         this.doctorRepository = doctorRepository;
         this.cityService = cityService;
         this.specialityService = specialityService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -68,6 +72,7 @@ public class DoctorServiceImp implements DoctorService {
         existingDoctor.setDescription(doctor.getDescription() != null ? doctor.getDescription() : existingDoctor.getDescription());
         existingDoctor.setExperiences(doctor.getExperiences() != null ? doctor.getExperiences() : existingDoctor.getExperiences());
         existingDoctor.setDiploma(doctor.getDiploma() != null ? doctor.getDiploma() : existingDoctor.getDiploma());
+        existingDoctor.setImage(doctor.getImage() != null ? doctor.getImage() : existingDoctor.getImage());
         if (doctor.getPassword() != null) {
             existingDoctor.setPassword(BCrypt.hashpw(doctor.getPassword(), BCrypt.gensalt()));
         }
@@ -82,6 +87,7 @@ public class DoctorServiceImp implements DoctorService {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("doctor not found"));
         doctorRepository.delete(doctor);
+        userRepository.delete(doctor);
         return true;
     }
 
@@ -109,5 +115,10 @@ public class DoctorServiceImp implements DoctorService {
         }
         Pageable pageable = PageRequest.of(page, size);
         return doctorRepository.findBySpecialityId(specialtyId,pageable);
+    }
+
+    @Override
+    public List<Doctor> getDoctors() {
+        return doctorRepository.findAll();
     }
 }

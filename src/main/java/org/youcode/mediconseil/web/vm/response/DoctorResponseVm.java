@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoctorResponseVm {
+    private UUID id;
     private String userName;
     private String password;
     private String firstName;
@@ -23,4 +26,5 @@ public class DoctorResponseVm {
     private String description;
     private Double price;
     private SpecialityResponseVm specialty;
+    private String image;
 }

@@ -56,4 +56,7 @@ public class DoctorRequestVm {
     @NotNull(message = "Specialty ID cannot be null")
     private UUID specialtyId;
 
+    private String image;
+
+
 }
