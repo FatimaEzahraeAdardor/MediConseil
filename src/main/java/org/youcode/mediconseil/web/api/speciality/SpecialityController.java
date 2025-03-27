@@ -70,5 +70,10 @@ public class SpecialityController {
         Page<SpecialityResponseVm> specialityResponseVmPage = new PageImpl<>(specialityResponseVms);
         return ResponseEntity.ok(specialityResponseVmPage);
     }
-
+    @GetMapping("all")
+    public ResponseEntity<List<SpecialityResponseVm>> findAllSpecialtiesList() {
+        List<Speciality> specialities = specialityService.findAllSpecialtiesList();
+        List<SpecialityResponseVm> specialityResponseVms = specialities.stream().map(specialityMapper::toVM).toList();
+        return ResponseEntity.ok(specialityResponseVms);
+    }
 }
