@@ -25,4 +25,5 @@ public class AvailabilityRequestVm {
 
     @NotNull(message = "Doctor ID is required")
     private UUID doctorId;
+
 }
