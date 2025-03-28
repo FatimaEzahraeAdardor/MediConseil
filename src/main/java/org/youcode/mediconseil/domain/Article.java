@@ -2,6 +2,7 @@ package org.youcode.mediconseil.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,14 +20,20 @@ public class Article {
     private UUID id;
 
     private String title;
-    private String content;
-    private String image;
-    private LocalDate created_at;
 
-    @ManyToOne
-    private Consultation consultation;
+    @Column(name = "content", length = 5000, nullable = false)
+    private String content;
+
+    @Column(columnDefinition = "TEXT")
+    private String image;
+
+    @CreationTimestamp
+    private LocalDateTime created_at;
 
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    private Doctor doctor;
 
 }

@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1739313821142-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: doctor
+            constraintName: fk_doctor_on_specialty
+  - changeSet:
+      id: 1739313821142-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: doctor
+            constraintName: fk_doctor_on_user
+  - changeSet:
+      id: 1739313821142-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: speciality_id
+                  type: UUID
+            tableName: doctor
+  - changeSet:
+      id: 1739313821142-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: doctor
+            constraintName: FK_DOCTOR_ON_ID
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1739313821142-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: speciality_id
+            baseTableName: doctor
+            constraintName: FK_DOCTOR_ON_SPECIALITY
+            referencedColumnNames: id
+            referencedTableName: speciality
+  - changeSet:
+      id: 1739313821142-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: specialty_id
+            tableName: doctor
+        - dropColumn:
+            columnName: user_id
+            tableName: doctor
+

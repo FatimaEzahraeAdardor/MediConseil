@@ -1,0 +1,147 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740851454973-15
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: consultation
+            constraintName: fk_consultation_on_user
+  - changeSet:
+      id: 1740851454973-6
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: end_time
+                  type: DATETIME
+              - column:
+                  name: is_booked
+                  type: BOOLEAN
+              - column:
+                  name: start_time
+                  type: DATETIME
+            tableName: availability
+  - changeSet:
+      id: 1740851454973-7
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: end_time
+            tableName: availability
+  - changeSet:
+      id: 1740851454973-9
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: is_booked
+            tableName: availability
+  - changeSet:
+      id: 1740851454973-10
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: patient_id
+                  type: UUID
+            tableName: consultation
+  - changeSet:
+      id: 1740851454973-11
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: patient_id
+            tableName: consultation
+  - changeSet:
+      id: 1740851454973-13
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: start_time
+            tableName: availability
+  - changeSet:
+      id: 1740851454973-14
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: consultation
+            constraintName: FK_CONSULTATION_ON_PATIENT
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740851454973-16
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: available
+            tableName: availability
+        - dropColumn:
+            columnName: date
+            tableName: availability
+  - changeSet:
+      id: 1740851454973-18
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: user_id
+            tableName: consultation
+        - dropColumn:
+            columnName: date_consultation
+            tableName: consultation
+  - changeSet:
+      id: 1740851454973-2
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    validateNullable: true
+                  name: date_consultation
+                  type: DATETIME
+            tableName: consultation
+  - changeSet:
+      id: 1740851454973-3
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: DATETIME
+            columnName: date_consultation
+            tableName: consultation
+            validate: true
+  - changeSet:
+      id: 1740851454973-4
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: UUID
+            columnName: doctor_id
+            tableName: availability
+            validate: true
+  - changeSet:
+      id: 1740851454973-5
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: UUID
+            columnName: doctor_id
+            tableName: consultation
+            validate: true
+

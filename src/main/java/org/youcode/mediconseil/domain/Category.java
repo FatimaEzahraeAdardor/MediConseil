@@ -11,15 +11,16 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Article> articles ;
+    private String description;
 
+    @OneToMany(mappedBy = "category")
+    private List<Article> articles;
 }

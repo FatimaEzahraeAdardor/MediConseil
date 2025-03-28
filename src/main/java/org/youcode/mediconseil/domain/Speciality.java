@@ -21,7 +21,7 @@ public class Speciality {
 
     private String name;
 
-    @ManyToMany(mappedBy = "specialties")
-    private List<Doctor> doctors ;
+    @OneToMany(mappedBy = "speciality", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Doctor> doctors;
 
 }

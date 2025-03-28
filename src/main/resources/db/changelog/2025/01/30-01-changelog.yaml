@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1738268513881-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: doctor_specialties
+            constraintName: fk_docspe_on_doctor
+  - changeSet:
+      id: 1738268513881-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: doctor_specialties
+            constraintName: fk_docspe_on_speciality
+  - changeSet:
+      id: 1738268513881-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: specialty_id
+                  type: UUID
+            tableName: doctor
+  - changeSet:
+      id: 1738268513881-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: specialty_id
+            baseTableName: doctor
+            constraintName: FK_DOCTOR_ON_SPECIALTY
+            referencedColumnNames: id
+            referencedTableName: speciality
+  - changeSet:
+      id: 1738268513881-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: doctor_specialties
+

@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1742605846984-7
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: image
+                  type: TEXT
+            tableName: article
+  - changeSet:
+      id: 1742605846984-9
+      author: fz.adardor
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: image_url
+            tableName: article
+
