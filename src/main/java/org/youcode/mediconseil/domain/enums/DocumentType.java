@@ -4,4 +4,5 @@ public enum DocumentType {
     MEDICAL_REPORT,
     PRESCRIPTION,
     MEDICAL_CERTIFICATE,
+    LAB_RESULTS
 }
