@@ -10,6 +10,7 @@ import org.youcode.mediconseil.service.SpecialityService;
 import org.youcode.mediconseil.web.exception.AlreadyExistException;
 import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Service
@@ -63,5 +64,10 @@ public class SpecialityServiceImp implements SpecialityService {
     public Page<Speciality> getAllSpecialitiesPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return specialityRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Speciality> findAllSpecialtiesList() {
+        return specialityRepository.findAll();
     }
 }

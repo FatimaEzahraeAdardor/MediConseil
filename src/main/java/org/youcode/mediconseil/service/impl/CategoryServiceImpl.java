@@ -9,6 +9,7 @@ import org.youcode.mediconseil.service.CategoryService;
 import org.youcode.mediconseil.web.exception.AlreadyExistException;
 import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new AlreadyExistException("A category with the same name already exists");
         }
         existingCategory.setName(category.getName() != null ? category.getName() : existingCategory.getName());
+        existingCategory.setDescription(category.getDescription() != null ? category.getDescription() : existingCategory.getDescription());
         return categoryRepository.save(existingCategory);
     }
     @Override
@@ -69,6 +71,11 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<Category> getAllCategoriesPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return categoryRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
     }
 
 }

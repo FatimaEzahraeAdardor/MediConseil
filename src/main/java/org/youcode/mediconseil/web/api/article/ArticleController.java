@@ -1,4 +1,4 @@
-package org.youcode.mediconseil.web.api;
+package org.youcode.mediconseil.web.api.article;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<Map<String, Object>> updateArticle(
             @PathVariable UUID id,
             @Valid @RequestBody ArticleRequestVm articleRequestVm) {
@@ -54,7 +54,7 @@ public class ArticleController {
 
         return ResponseEntity.ok(response);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<Map<String, String>> deleteArticle(@PathVariable UUID id) {
         articleService.delete(id);
 
@@ -73,7 +73,7 @@ public class ArticleController {
         return ResponseEntity.ok(responseVm);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<Page<ArticleResponseVm>> getAllArticles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

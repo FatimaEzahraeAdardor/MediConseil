@@ -1,5 +1,6 @@
 package org.youcode.mediconseil.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +23,6 @@ public class Consultation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Future
     @NotNull
     private LocalDateTime dateConsultation;
 
@@ -43,5 +43,8 @@ public class Consultation {
     private User patient;
 
     @OneToMany(mappedBy = "consultation", cascade = CascadeType.ALL)
+    @JsonIgnore // Empêche la boucle infinie
+
     private List<Document> documents = new ArrayList<>();
+
 }

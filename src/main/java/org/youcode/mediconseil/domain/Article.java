@@ -24,7 +24,7 @@ public class Article {
     @Column(name = "content", length = 5000, nullable = false)
     private String content;
 
-    @Column(name = "image_url")
+    @Column(columnDefinition = "TEXT")
     private String image;
 
     @CreationTimestamp

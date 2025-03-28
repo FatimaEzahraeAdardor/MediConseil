@@ -1,6 +1,8 @@
 package org.youcode.mediconseil.domain.enums;
 
 public enum DocumentType {
-    CERTIFICAT_MEDICAL,
-    PRESCRIPTION
+    MEDICAL_REPORT,
+    PRESCRIPTION,
+    MEDICAL_CERTIFICATE,
+    LAB_RESULTS
 }

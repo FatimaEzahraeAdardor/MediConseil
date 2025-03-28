@@ -1,4 +1,5 @@
 package org.youcode.mediconseil.service;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
 
@@ -10,7 +11,8 @@ public interface CityService {
     City update(UUID id , City city);
     Boolean delete(UUID id);
     Optional<City> findById(UUID id);
-    List<City> findAll();
-    List<City> findAllByRegion(String region);
-
+    Page<City> findAll(int page, int size);
+    Page<City> findAllByRegion(String region, int page, int size);
+    List<City> findAllCities();
+     List<String> getAllRegions() ;
 }

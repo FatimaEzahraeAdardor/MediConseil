@@ -17,7 +17,7 @@ public class ArticleResponseVm {
     private String title;
     private String content;
     private String image;
-    private LocalDateTime createdAt;
-    private UUID categoryId;
-    private UUID doctorId;
+    private LocalDateTime created_at;
+    private CategoryResponseVM category;
+    private DoctorResponseVm doctor;
 }

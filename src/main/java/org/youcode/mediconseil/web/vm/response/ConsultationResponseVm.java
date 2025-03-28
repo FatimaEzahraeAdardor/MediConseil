@@ -12,6 +12,6 @@ public class ConsultationResponseVm {
     private LocalDateTime dateConsultation;
     private String motif;
     private ConsultationStatus status;
-    private UUID doctorId;
-    private UUID patientId;
+    private PatientResponseVm patient;
+    private DoctorResponseVm doctor;
 }

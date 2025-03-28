@@ -3,13 +3,13 @@ spring:
     properties:
       hibernate:
         default_schema: public
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   liquibase:
     enabled: true
     change-log: db/changelog/master.yaml
-#  autoconfigure:
-#    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-
   docker:
     compose:
       file: src/main/docker/compose.yaml
@@ -28,5 +28,6 @@ spring:
             enable: true
     default-encoding: UTF-8
     test-connection: true
+
 server:
   port: 8080

@@ -5,25 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import org.youcode.mediconseil.domain.Article;
-import org.youcode.mediconseil.domain.Category;
+import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.domain.Doctor;
-import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.service.DoctorService;
 import org.youcode.mediconseil.web.vm.mapper.DoctorMapper;
 import org.youcode.mediconseil.web.vm.request.DoctorRequestVm;
-import org.youcode.mediconseil.web.vm.request.RegisterRequest;
-import org.youcode.mediconseil.web.vm.response.ArticleResponseVm;
-import org.youcode.mediconseil.web.vm.response.CategoryResponseVM;
-import org.youcode.mediconseil.web.vm.response.ConsultationResponseVm;
+import org.youcode.mediconseil.web.vm.response.CityResponseVM;
 import org.youcode.mediconseil.web.vm.response.DoctorResponseVm;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/doctors")
@@ -46,11 +36,12 @@ public class DoctorController {
     @PutMapping("update/{id}")
     public ResponseEntity<Map<String, Object>> updateDoctor(@PathVariable("id") UUID id, @RequestBody @Valid DoctorRequestVm doctorRequestVm){
         Doctor savedDoctor = doctorService.update(id, doctorRequestVm);
+        DoctorResponseVm doctorResponseVm = doctorMapper.toVm(savedDoctor);
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", "doctor updated successfully");
-        response.put("user", savedDoctor);
+        response.put("user", doctorResponseVm);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
     @GetMapping("/{id}")
     public ResponseEntity<DoctorResponseVm> findById(@PathVariable UUID id) {
@@ -63,7 +54,7 @@ public class DoctorController {
         doctorService.delete(id);
         return ResponseEntity.ok("Deleted doctor successfully");
     }
-    @GetMapping()
+    @GetMapping("all")
     public ResponseEntity<Page<DoctorResponseVm>> getAllDoctors(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -71,6 +62,7 @@ public class DoctorController {
         Page<DoctorResponseVm> doctorResponseVms = doctorPage.map(doctorMapper::toVm);
         return ResponseEntity.ok(doctorResponseVms);
     }
+
     @GetMapping("/specialty/{specialtyId}")
     public ResponseEntity<Page<DoctorResponseVm>> getDoctorsBySpecialty(
             @PathVariable UUID specialtyId,
@@ -83,4 +75,10 @@ public class DoctorController {
         return ResponseEntity.ok(responseVms);
     }
 
+    @GetMapping("")
+    public ResponseEntity<List<DoctorResponseVm>> findDoctors() {
+        List<Doctor> doctors = doctorService.getDoctors();
+        List<DoctorResponseVm> doctorResponseVmList = doctors.stream().map(doctorMapper::toVm).toList();
+        return ResponseEntity.ok(doctorResponseVmList);
+    }
     }

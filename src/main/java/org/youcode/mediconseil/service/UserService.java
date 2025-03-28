@@ -13,6 +13,7 @@ public interface UserService {
     Boolean delete(UUID id);
     Optional<User> findByID(UUID id);
     Page<User> getAllUsersPaginated(int page, int size);
+    Page<User> getAllPatientsPaginated(int page, int size);
 
 
 }

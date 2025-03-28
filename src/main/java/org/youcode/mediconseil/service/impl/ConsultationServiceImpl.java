@@ -8,201 +8,155 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.domain.Consultation;
+import org.youcode.mediconseil.domain.User;
 import org.youcode.mediconseil.domain.enums.ConsultationStatus;
-import org.youcode.mediconseil.repository.AvailabilityRepository;
 import org.youcode.mediconseil.repository.ConsultationRepository;
-import org.youcode.mediconseil.repository.DoctorRepository;
-import org.youcode.mediconseil.service.ConsultaionService;
+import org.youcode.mediconseil.service.AvailabilityService;
+import org.youcode.mediconseil.service.ConsultationService;
+import org.youcode.mediconseil.service.UserService;
 import org.youcode.mediconseil.web.exception.ResourceNotFoundException;
-import org.youcode.mediconseil.web.exception.consultation.*;
+import org.youcode.mediconseil.web.vm.request.ConsultationRequestVm;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ConsultationServiceImpl implements ConsultaionService {
+public class ConsultationServiceImpl implements ConsultationService {
+
     private final ConsultationRepository consultationRepository;
-    private final AvailabilityRepository availabilityRepository;
-    private final DoctorRepository doctorRepository;
+    private final AvailabilityService availabilityService;
+    private final UserService userService;
     private final EmailService emailService;
 
     @Override
+    public List<Consultation> findAll() {
+        return consultationRepository.findAll();
+    }
+
+    @Override
+    public Optional<Consultation> findById(UUID id) {
+        return consultationRepository.findById(id);
+    }
+
+    @Override
     @Transactional
-    public Consultation save(Consultation consultation, UUID availabilityId) {
-        // Find the availability
-        Availability availability = availabilityRepository.findById(availabilityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Availability not found"));
-
-        // Check if availability is already booked
-        if (Boolean.TRUE.equals(availability.getIsBooked())) {
-            throw new TimeSlotAlreadyBookedException("This time slot is already booked");
-        }
-
-        // Verify doctor matches the availability
-        if (!availability.getDoctor().getId().equals(consultation.getDoctor().getId())) {
-            throw new DoctorMismatchException("Doctor does not match the availability");
-        }
-
-        // Explicitly set the consultation date to the availability start time
-        consultation.setDateConsultation(availability.getStartTime());
-
-        // Additional validation if needed
-        if (!consultation.getDateConsultation().equals(availability.getStartTime())) {
-            throw new ConsultationDateMismatchException("Consultation date must match availability start time");
-        }
-
-        // Mark availability as booked
-        availability.setIsBooked(true);
-        availabilityRepository.save(availability);
-
-        // Ensure status is set to PENDING
-        consultation.setStatus(ConsultationStatus.PENDING);
-
-        // Save consultation
+    public Consultation save(Consultation consultation) {
         return consultationRepository.save(consultation);
     }
 
     @Override
     @Transactional
-    public Consultation update(Consultation consultation, UUID availabilityId) {
-        // Find existing consultation
-        Consultation existingConsultation = consultationRepository.findById(consultation.getId())
-                .orElseThrow(() -> new RuntimeException("Consultation not found"));
+    public Consultation bookConsultation(ConsultationRequestVm requestVm) {
+        // First, find or create the availability
+        Availability availability = availabilityService.findOrCreateAvailabilityById(
+                requestVm.getDoctorId(),
+                requestVm.getAvailabilityId(),
+                requestVm.getDateConsultation(),
+                requestVm.getDateConsultation().plusMinutes(30) // Assuming 30-minute consultations
+        );
 
-        // Check if consultation is in PENDING status
-        if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new RuntimeException("Only PENDING consultations can be updated");
+        // Check if the availability is already booked
+        if (Boolean.TRUE.equals(availability.getIsBooked())) {
+            throw new RuntimeException("Ce créneau horaire est déjà réservé.");
         }
 
-        // Find the new availability
-        Availability newAvailability = availabilityRepository.findById(availabilityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Availability not found"));
+        // Mark the availability as booked
+        availability.setIsBooked(true);
+        availabilityService.save(availability);
 
-        // Check if new availability is already booked
-        if (Boolean.TRUE.equals(newAvailability.getIsBooked())) {
-            throw new TimeSlotAlreadyBookedException("This time slot is already booked");
-        }
+        // Get the patient
+        User patient = userService.findByID(requestVm.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + requestVm.getPatientId()));
 
-        // Verify doctor matches the new availability
-        if (!newAvailability.getDoctor().getId().equals(consultation.getDoctor().getId())) {
-            throw new DoctorMismatchException("Doctor does not match the new availability");
-        }
-        // Find and update the associated availability
-        Availability availability = availabilityRepository.findByDoctorAndStartTime(
-                existingConsultation.getDoctor(),
-                existingConsultation.getDateConsultation()
-        ).orElse(null);
+        // Create and save the consultation
+        Consultation consultation = new Consultation();
+        consultation.setDoctor(availability.getDoctor());
+        consultation.setPatient(patient);
+        consultation.setMotif(requestVm.getMotif());
+        consultation.setDateConsultation(requestVm.getDateConsultation());
+        consultation.setStatus(ConsultationStatus.PENDING); // Set initial status
 
-        // If availability is found, mark it as not booked
-        if (availability != null) {
-            availability.setIsBooked(false);
-            availabilityRepository.save(availability);
-        }
-        // Update consultation details
-        existingConsultation.setDateConsultation(newAvailability.getStartTime());
-        existingConsultation.setMotif(consultation.getMotif());
-        existingConsultation.setDoctor(newAvailability.getDoctor());
+        return consultationRepository.save(consultation);
+    }
 
-        // Only update patient if provided
-        if (consultation.getPatient() != null) {
-            existingConsultation.setPatient(consultation.getPatient());
-        }
-
-        // Mark new availability as booked
-        newAvailability.setIsBooked(true);
-        availabilityRepository.save(newAvailability);
-
-        // Save and return updated consultation
-        return consultationRepository.save(existingConsultation);
-    }    @Override
-    public Boolean delete(UUID id) {
+    @Override
+    public Consultation update(UUID id, Consultation consultation) {
         Consultation existingConsultation = consultationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consultation not found"));
-        if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new InvalidConsultationStatusException("Only PENDING consultations can be deleted");
-        }
+                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found"));
+
+        // Update fields
+        existingConsultation.setMotif(consultation.getMotif());
+        existingConsultation.setStatus(consultation.getStatus());
+        // Update other fields as needed
+
+        return consultationRepository.save(existingConsultation);
+    }
+
+    @Override
+    public Boolean delete(UUID id) {
         consultationRepository.deleteById(id);
         return true;
     }
+
+    @Override
+    public Page<Consultation> findByPatientId(UUID patientId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return consultationRepository.findByPatientId(patientId, pageable);
+    }
+
+    @Override
+    public Page<Consultation> findByDoctorId(UUID doctorId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return consultationRepository.findByDoctorId(doctorId, pageable);
+    }
+
     @Override
     @Transactional
-    public Consultation cancelConsultation(UUID consultationId) {
-        // Find existing consultation
-        Consultation existingConsultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found"));
+    public Consultation cancelConsultation(UUID id) {
+        Consultation consultation = consultationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found with ID: " + id));
 
-        // Check if consultation is in PENDING status
-        if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new InvalidConsultationStatusException("Only PENDING consultations can be canceled");
+        if (!ConsultationStatus.PENDING.equals(consultation.getStatus())) {
+            throw new RuntimeException("Seules les consultations en attente peuvent être annuléés.");
         }
 
-        // Update consultation status to CANCELED
-        existingConsultation.setStatus(ConsultationStatus.CANCELLED);
+        // Update consultation status
+        consultation.setStatus(ConsultationStatus.CANCELLED);
 
-        // Find and update the associated availability
-        Availability availability = availabilityRepository.findByDoctorAndStartTime(
-                existingConsultation.getDoctor(),
-                existingConsultation.getDateConsultation()
-        ).orElse(null);
+        // Free up the time slot in availabilities if applicable
+        Availability availability = availabilityService.findByDoctorAndStartDate(
+                        consultation.getDoctor().getId(),
+                        consultation.getDateConsultation())
+                .orElse(null);
 
-        // If availability is found, mark it as not booked
         if (availability != null) {
             availability.setIsBooked(false);
-            availabilityRepository.save(availability);
+            availabilityService.save(availability);
         }
 
-        // Save and return updated consultation
-        return consultationRepository.save(existingConsultation);
+        return consultationRepository.save(consultation);
     }
+
     @Override
     @Transactional
-    public Consultation confirmConsultation(UUID consultationId) {
-        // Find existing consultation
-        Consultation existingConsultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found"));
-        // Check if consultation start date is in the future
-        LocalDateTime now = LocalDateTime.now();
-        if (existingConsultation.getDateConsultation().isBefore(now)) {
-            throw new PastConsultationException(
-                    "Cannot confirm a consultation with a past date.");
-        }
-        // Check if consultation is in PENDING status
-        if (existingConsultation.getStatus() != ConsultationStatus.PENDING) {
-            throw new InvalidConsultationStatusException("Only PENDING consultations can be confirmed");
+    public Consultation confirmConsultation(UUID id) {
+        Consultation consultation = consultationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consultation not found with ID: " + id));
+
+        if (!ConsultationStatus.PENDING.equals(consultation.getStatus())) {
+            throw new RuntimeException("Seules les consultations en attente peuvent être confirmées.");
         }
 
-        // Update consultation status to CONFIRMED
-        existingConsultation.setStatus(ConsultationStatus.CONFIRMED);
 
-        // Save and return updated consultation
-        Consultation confirmedConsultation = consultationRepository.save(existingConsultation);
+        consultation.setStatus(ConsultationStatus.CONFIRMED);
 
-        // Send confirmation email
+        Consultation confirmedConsultation = consultationRepository.save(consultation);
+
         emailService.sendConsultationConfirmationEmail(confirmedConsultation);
-
         return confirmedConsultation;
     }
 
-    @Override
-    public Optional<Consultation> findByID(UUID id) {
-        return consultationRepository.findById(id);
-    }
 
-    @Override
-    public Page<Consultation> getAllConsultationsPaginated(int page, int size) {
-        return consultationRepository.findAll(PageRequest.of(page, size));
-    }
-    @Override
-    public Page<Consultation> getConsultationsByDoctorId(UUID doctorId, int page, int size) {
-        // Verify doctor exists
-        doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
-
-        Pageable pageable = PageRequest.of(page, size);
-
-        // Find consultations by doctor
-        return consultationRepository.getConsultationsByDoctorId(doctorId, pageable);
-    }
 }

@@ -2,6 +2,7 @@ package org.youcode.mediconseil.web.api.city;
 
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,19 +59,29 @@ public class CityController {
         CityResponseVM cityResponseVM = cityMapper.toVM(city.get());
         return ResponseEntity.ok(cityResponseVM);
     }
-    @GetMapping()
-    public ResponseEntity<List<CityResponseVM>> findAll() {
-        List<City> cityList = cityService.findAll();
-        List<CityResponseVM> cityResponseVMSlist =cityList.stream().map(cityMapper::toVM).toList();
-        return ResponseEntity.ok(cityResponseVMSlist);
-
-    }
-    @GetMapping("all")
-    public ResponseEntity<List<CityResponseVM>> findCitiesByRegion(@RequestParam(required = false) String region) {
-        List<City> cityList = cityService.findAllByRegion(region);
+    @GetMapping("list")
+    public ResponseEntity<List<CityResponseVM>> findAllCities() {
+        List<City> cityList = cityService.findAllCities();
         List<CityResponseVM> cityResponseVMSlist = cityList.stream().map(cityMapper::toVM).toList();
         return ResponseEntity.ok(cityResponseVMSlist);
     }
+    @GetMapping("all")
+    public ResponseEntity<Page<CityResponseVM>> findAll(@RequestParam int page, @RequestParam int size) {
+        Page<City> cityPage = cityService.findAll(page, size);
+        Page<CityResponseVM> cityResponseVMPage = cityPage.map(cityMapper::toVM);
+        return ResponseEntity.ok(cityResponseVMPage);
 
+    }
+    @GetMapping("/region/{region}")
+    public ResponseEntity<Page<CityResponseVM>> findCitiesByRegion(@PathVariable String region, @RequestParam int page, @RequestParam int size) {
+        Page<City> cityPage = cityService.findAllByRegion(region,page,size);
+        Page<CityResponseVM> cityResponseVMPage = cityPage.map(cityMapper::toVM);
+        return ResponseEntity.ok(cityResponseVMPage);
+    }
+    @GetMapping("/regions")
+    public ResponseEntity<List<String>> getAllRegions() {
+        List<String> regions = cityService.getAllRegions();
+        return new ResponseEntity<>(regions, HttpStatus.OK);
+    }
 
 }

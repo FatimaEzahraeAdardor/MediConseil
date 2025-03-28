@@ -62,10 +62,18 @@ public class CategoryController {
     }
     @GetMapping()
     public ResponseEntity<Page<CategoryResponseVM>> getAllCategories(@RequestParam int page, @RequestParam int size) {
-        Page<Category> categories =categoryService.getAllCategoriesPaginated(page,size);
-        List<CategoryResponseVM> categoryResponseVMS =categories.getContent().stream().map(categoryMapper::toVM).toList();
+        Page<Category> categories = categoryService.getAllCategoriesPaginated(page, size);
+        List<CategoryResponseVM> categoryResponseVMS = categories.getContent().stream().map(categoryMapper::toVM).toList();
         Page<CategoryResponseVM> categoryResponseVMPage = new PageImpl<>(categoryResponseVMS);
         return ResponseEntity.ok(categoryResponseVMPage);
+
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<CategoryResponseVM>> findCategories() {
+        List<Category> categories = categoryService.findAllCategories();
+        List<CategoryResponseVM> categoryResponseVMS = categories.stream().map(categoryMapper::toVM).toList();
+        return ResponseEntity.ok(categoryResponseVMS);
     }
 
 }

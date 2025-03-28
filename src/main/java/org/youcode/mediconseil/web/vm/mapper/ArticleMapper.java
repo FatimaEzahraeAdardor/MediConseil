@@ -15,8 +15,6 @@ public interface ArticleMapper {
     @Mapping(target = "doctor", expression = "java(mapDoctor(request.getDoctorId()))")
     Article toEntity(ArticleRequestVm request);
 
-    @Mapping(target = "categoryId", source = "category.id")
-    @Mapping(target = "doctorId", source = "doctor.id")
     ArticleResponseVm toVm(Article article);
 
     // Add this method to explicitly map doctor

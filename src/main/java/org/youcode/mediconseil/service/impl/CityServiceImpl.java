@@ -1,5 +1,8 @@
 package org.youcode.mediconseil.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.youcode.mediconseil.domain.City;
 import org.youcode.mediconseil.repository.CityRepository;
@@ -56,16 +59,29 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<City> findAll() {
+    public Page<City> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return cityRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<City> findAllByRegion(String region, int page, int size) {
+        if(region != null && !region.isEmpty()) {
+            Pageable pageable = PageRequest.of(page, size);
+            return cityRepository.findByRegion(region,pageable);
+        }
+        return null;
+    }
+
+    @Override
+    public List<City> findAllCities() {
         return cityRepository.findAll();
     }
 
     @Override
-    public List<City> findAllByRegion(String region) {
-        if(region != null && !region.isEmpty()) {
-            return cityRepository.findByRegion(region);
-        }
-        return cityRepository.findAll();
+    public List<String> getAllRegions() {
+        return cityRepository.findDistinctRegions();
     }
+
 
 }

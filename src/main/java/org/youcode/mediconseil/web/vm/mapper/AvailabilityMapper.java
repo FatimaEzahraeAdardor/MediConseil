@@ -8,6 +8,7 @@ import org.youcode.mediconseil.domain.Availability;
 import org.youcode.mediconseil.domain.Doctor;
 import org.youcode.mediconseil.repository.DoctorRepository;
 import org.youcode.mediconseil.web.vm.request.AvailabilityRequestVm;
+import org.youcode.mediconseil.web.vm.response.AvailabilityResponseVm;
 
 import java.util.UUID;
 
@@ -25,4 +26,6 @@ public abstract class AvailabilityMapper {
         return doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new RuntimeException("Doctor not found with ID: " + doctorId));
     }
+    public abstract AvailabilityResponseVm toVm(Availability availability);
+
 }
